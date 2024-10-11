@@ -16,4 +16,8 @@ public class UserTableService {
         dao.save(vo);
     }
 
+    public void checkId(UserTable vo){
+        dao.findAll();
+    }
+
 }

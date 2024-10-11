@@ -19,8 +19,6 @@ public class UserTableController {
 
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody UserTable vo) {
-        log.info("vo : " + vo);
-        log.info("안녕하세요");
         service.signup(vo);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
