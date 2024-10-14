@@ -22,4 +22,12 @@ public class UserTableController {
         service.signup(vo);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody UserTable vo){
+        log.info("vo Id" + vo.getUserId());
+        log.info("vo pwd" + vo.getUserPwd());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
