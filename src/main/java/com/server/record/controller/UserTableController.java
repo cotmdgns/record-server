@@ -25,9 +25,13 @@ public class UserTableController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserTable vo){
-        log.info("vo Id" + vo.getUserId());
-        log.info("vo pwd" + vo.getUserPwd());
-        return ResponseEntity.status(HttpStatus.OK).build();
+        UserTable member = service.login(vo.getUserId());
+        if(member.getUserPwd().equals(vo.getUserPwd())){
+            log.info("member : 비밀번호 맞음");
+            return ResponseEntity.status(HttpStatus.OK).body(member);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
 }
+
