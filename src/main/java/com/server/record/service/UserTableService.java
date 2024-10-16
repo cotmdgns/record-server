@@ -19,13 +19,16 @@ public class UserTableService {
     public void signup(UserTable vo){
         dao.save(vo);
     }
+    // 아이디 체크
+    public UserTable login(String id, String pwd){
+        UserTable member = dao.login(id,pwd).get();
+        return member;
+    }
     
     // 로그인 체크
-    public UserTable login(String id){
+    public UserTable idCheck(String id){
         UserTable member = dao.CheckId(id).get();
         return member;
     }
-
-
 
 }
