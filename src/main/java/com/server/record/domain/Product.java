@@ -29,8 +29,11 @@ public class Product {
     @Column(name="product_quantity")
     private String productQuantity;
 
-    @ManyToOne
-    @JoinColumn(name="product_img")
-    private ProductImg productImg;
+//    @ManyToOne
+//    @JoinColumn(name="product_img")
+//    private ProductImg productImg;
+    @Column(name="product_img")
+    private int productImg;
+
 
 }

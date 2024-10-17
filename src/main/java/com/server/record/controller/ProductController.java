@@ -4,6 +4,7 @@ import com.server.record.domain.Product;
 import com.server.record.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,11 @@ public class ProductController {
 
     @GetMapping("MainLP")
     public ResponseEntity MainLP(){
-        log.info("gd : " + service.MainLP());
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(service.MainLP());
+    }
+
+    @GetMapping("MainRecord")
+    public ResponseEntity MainRecord(){
+        return ResponseEntity.status(HttpStatus.OK).body(service.MainRecode());
     }
 }
