@@ -39,8 +39,8 @@ public class UserTable {
     @Column(name="user_created")
     private LocalDate userCreated;
 
-    @Column(name="user_address")
-    private String userAddress;
+//    @Column(name="user_address")
+//    private String userAddress;
 
     @Column(name="user_email")
     private String userEmail;

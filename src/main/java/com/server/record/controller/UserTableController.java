@@ -12,10 +12,11 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/*")
+@RequestMapping("/api/userTable/*")
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 public class UserTableController {
 
@@ -26,35 +27,22 @@ public class UserTableController {
     //회원가입로직
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody UserTable vo) {
-        /*
-        * 1. 회원가입 로직 성공하고
-        * 2. 성공하고나서 해당 회원전용 이미지 폴더 만들어주기
-        * */
-//        String folderPath = "\\\\192.168.10.23\\userFolder\\" + vo.getUserId() + "\\";
-//        File folder = new File(folderPath);
-//
-//        String folderPath2 = "\\\\192.168.10.23\\userFolder\\";
-//        File folder2 = new File(folderPath2);
-//
-//        log.info("폴더2 : " +folder2);
-//        log.info("폴더존재  : " +folder.exists());
-//        log.info("폴더존재2  : " +folder2.exists());
-//        if(!folder.exists()){
-//            if(folder.mkdir()){
-//                log.info("생성됨 ㅇㅇ");
-//            }else{
-//                log.info("생성됨 ㄴㄴ");
-//            }
-//        }
-
-
+        // 랜덤값 주기
+        int num = (int)(Math.random()*4);
+        // 회원가입 해당 유저 전용 이미지 만들기
+        Path directoryPath = Paths.get("\\\\192.168.10.51\\record\\userFolder\\" + vo.getUserId() + "\\");
+        Path directoryProfile = Paths.get("\\\\192.168.10.51\\record\\userFolder\\" + vo.getUserId() + "\\userProfile");
         try{
-
-            Path directoryPath = Paths.get("\\\\\\\\192.168.10.23\\\\userFolder\\\\" + vo.getUserId() + "\\");
+            // 이미지가 없다면 디폴트값 넣기
+            if(vo.getUserImg() == null){
+                vo.setUserImg("http://192.168.10.51:8084/ImageDefault/img-profile-default-"+ num + ".png");
+            }
             log.info("path : " + directoryPath);
+            log.info("path : " + directoryProfile);
             Files.createDirectories(directoryPath);
+            Files.createDirectories(directoryProfile);
 
-//            service.signup(vo);
+            service.signup(vo);
             return ResponseEntity.status(HttpStatus.OK).build();
         }catch(Exception e){
             log.info(e+"");
@@ -62,6 +50,7 @@ public class UserTableController {
         }
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserTable vo){
         UserTable member = service.login(vo.getUserId(),vo.getUserPwd());
@@ -72,6 +61,7 @@ public class UserTableController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    // 아이디 체크
     @GetMapping("/idCheck/{id}")
     public ResponseEntity idCheck(@PathVariable String id){
         try{
@@ -82,6 +72,13 @@ public class UserTableController {
             // 없을 경우
             return ResponseEntity.ok().build();
         }
+    }
+
+    // 아이디 삭제하기
+    @DeleteMapping("/userDelete")
+    public ResponseEntity userDelete(@RequestBody UserTable vo){
+        log.info("" + vo);
+        return ResponseEntity.ok().build();
     }
 
 }
