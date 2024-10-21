@@ -8,6 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/*")
@@ -17,12 +22,42 @@ public class UserTableController {
     @Autowired
     private UserTableService service;
 
+
+    //회원가입로직
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody UserTable vo) {
+        /*
+        * 1. 회원가입 로직 성공하고
+        * 2. 성공하고나서 해당 회원전용 이미지 폴더 만들어주기
+        * */
+//        String folderPath = "\\\\192.168.10.23\\userFolder\\" + vo.getUserId() + "\\";
+//        File folder = new File(folderPath);
+//
+//        String folderPath2 = "\\\\192.168.10.23\\userFolder\\";
+//        File folder2 = new File(folderPath2);
+//
+//        log.info("폴더2 : " +folder2);
+//        log.info("폴더존재  : " +folder.exists());
+//        log.info("폴더존재2  : " +folder2.exists());
+//        if(!folder.exists()){
+//            if(folder.mkdir()){
+//                log.info("생성됨 ㅇㅇ");
+//            }else{
+//                log.info("생성됨 ㄴㄴ");
+//            }
+//        }
+
+
         try{
-            service.signup(vo);
+
+            Path directoryPath = Paths.get("\\\\\\\\192.168.10.23\\\\userFolder\\\\" + vo.getUserId() + "\\");
+            log.info("path : " + directoryPath);
+            Files.createDirectories(directoryPath);
+
+//            service.signup(vo);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }catch(Exception exception){
+        }catch(Exception e){
+            log.info(e+"");
             return ResponseEntity.status(HttpStatus.OK).build();
         }
     }
