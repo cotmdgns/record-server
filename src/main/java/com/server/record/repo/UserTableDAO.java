@@ -17,4 +17,9 @@ public interface UserTableDAO extends JpaRepository<UserTable, Integer> {
     // 로그인 확인?
     @Query(value = "SELECT * FROM user_table WHERE user_id = :id AND user_pwd = :pwd",nativeQuery = true)
     Optional<UserTable> login(@Param("id") String id,@Param("pwd")String pwd);
+
+    // 아이디 조회
+    @Query(value = "SELECT * FROM user_table WHERE user_code = :code ",nativeQuery = true)
+    UserTable deleteIdCheck(@Param("code") int code);
+
 }

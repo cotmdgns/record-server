@@ -28,7 +28,7 @@ public class UserTable {
     private String userName;
 
     @Column(name="user_gender")
-    private char userGender;
+    private String userGender;
 
     @Column(name="user_phone")
     private String userPhone;
