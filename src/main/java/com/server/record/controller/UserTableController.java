@@ -80,13 +80,21 @@ public class UserTableController {
     @PutMapping("/upDataController")
     public ResponseEntity upDataController(@RequestBody UserTableDTO vo) {
         UserTable member = service.UserIdCheck(vo.getUserCode());
-        // 변경전 비밀번호,  서버에있는 비밀번호가 같내
-        if(vo.getOldUserPwd().equals(member.getUserPwd())) {
+        log.info("vo : " + vo);
+        log.info("member : " + vo.getOldUserPwd().equals(vo.getUserPwd()));
+        // 변경전 비밀번호,  서버에있는 비밀번호가 같내 
+        // 여기서는 비밀번호가 같냐 다르냐만 체크하고 리턴해주면됨
+        if(vo.getOldUserPwd().equals(vo.getUserPwd())){
+            // 클라이언트에서 기존비번과 새비번이 같을경우
+            return ResponseEntity.ok().body("1");
+        } else if(vo.getOldUserPwd().equals(member.getUserPwd())) {
             member.setUserPwd(vo.getUserPwd());
             service.userUpData(member);
-            return ResponseEntity.ok().build();
-        }else{
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호 틀림");
+            // 같으면 변경
+            return ResponseEntity.ok().body("2");
+        } else {
+            // 다르면 코드 3
+            return ResponseEntity.ok().body("3");
         }
     }
 

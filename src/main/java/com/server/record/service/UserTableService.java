@@ -35,7 +35,7 @@ public class UserTableService {
     public void userDelete(int userCode){
         dao.deleteById(userCode);
     }
-
+    // 유저 업데이트
     public void userUpData(UserTable vo){
         dao.save(vo);
     }
