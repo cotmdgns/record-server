@@ -36,9 +36,6 @@ public class UserTable {
     @Column(name="user_birthdaydata")
     private String userBirthdayData;
 
-    @Column(name="user_created")
-    private LocalDate userCreated;
-
 //    @Column(name="user_address")
 //    private String userAddress;
 

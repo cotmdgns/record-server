@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class UserTableController {
     @Autowired
     private UserTableService service;
 
+    private String url = "\\\\192.168.10.51\\record\\userFolder\\";
 
     //회원가입로직
     @PostMapping("/signup")
@@ -33,8 +35,8 @@ public class UserTableController {
         // 랜덤값 주기
         int num = (int)(Math.random()*4);
         // 회원가입 해당 유저 전용 이미지 만들기
-        Path directoryPath = Paths.get("\\\\192.168.10.51\\record\\userFolder\\" + vo.getUserId() + "\\");
-        Path directoryProfile = Paths.get("\\\\192.168.10.51\\record\\userFolder\\" + vo.getUserId() + "\\userProfile");
+        Path directoryPath = Paths.get(url + vo.getUserId() + "\\");
+        Path directoryProfile = Paths.get(url + vo.getUserId() + "\\userProfile");
         try{
             // 이미지가 없다면 디폴트값 넣기
             if(vo.getUserImg() == null){
@@ -80,22 +82,42 @@ public class UserTableController {
     @PutMapping("/upDataController")
     public ResponseEntity upDataController(@RequestBody UserTableDTO vo) {
         UserTable member = service.UserIdCheck(vo.getUserCode());
-        log.info("vo : " + vo);
-        log.info("member : " + vo.getOldUserPwd().equals(vo.getUserPwd()));
-        // 변경전 비밀번호,  서버에있는 비밀번호가 같내 
-        // 여기서는 비밀번호가 같냐 다르냐만 체크하고 리턴해주면됨
-        if(vo.getOldUserPwd().equals(vo.getUserPwd())){
-            // 클라이언트에서 기존비번과 새비번이 같을경우
-            return ResponseEntity.ok().body("1");
-        } else if(vo.getOldUserPwd().equals(member.getUserPwd())) {
-            member.setUserPwd(vo.getUserPwd());
+        if(vo.getOldUserPwd() != null && vo.getUserPwd() != null ){
+            // 변경전 비밀번호,  서버에있는 비밀번호가 같내
+            // 여기서는 비밀번호가 같냐 다르냐만 체크하고 리턴해주면됨
+            if(vo.getOldUserPwd().equals(vo.getUserPwd())){
+                // 클라이언트에서 기존비번과 새비번이 같을경우
+                return ResponseEntity.ok().body("1");
+            } else if(vo.getOldUserPwd().equals(member.getUserPwd())) {
+                member.setUserPwd(vo.getUserPwd());
+                service.userUpData(member);
+                // 같으면 변경
+                return ResponseEntity.ok().body("2");
+            } else {
+                // 다르면 코드 3
+                return ResponseEntity.ok().body("3");
+            }
+        }else if(vo.getUserEmail() != null){
+            // 이메일 변경 서버위치
+            member.setUserEmail(vo.getUserEmail());
             service.userUpData(member);
-            // 같으면 변경
-            return ResponseEntity.ok().body("2");
-        } else {
-            // 다르면 코드 3
-            return ResponseEntity.ok().body("3");
+            return ResponseEntity.ok().body(member.getUserEmail());
         }
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/upDataImgController")
+    public ResponseEntity userImgUpDatePut(@RequestParam("userCode") int userCode,
+                                           @RequestParam("userImg") MultipartFile userImg) throws IOException {
+
+        UserTable vo = service.UserIdCheck(userCode);
+
+        Path directoryPath = Paths.get(url + vo.getUserId() + "\\");
+        Path directoryProfile = Paths.get(url + vo.getUserId() + "\\userProfile");
+        log.info(""+Files.exists(directoryPath));
+        log.info(""+Files.exists(directoryProfile));
+
+        log.info(""+vo);
+        return ResponseEntity.ok().build();
     }
 
     // 아이디 삭제하기
@@ -103,7 +125,7 @@ public class UserTableController {
     public void userDelete(@PathVariable int code){
         // 삭제하기전에 해당 정보 가져오기
         UserTable member = deleteIdCheck(code);
-        File directory = new File("\\\\192.168.10.51\\record\\userFolder\\" + member.getUserId() + "\\");
+        File directory = new File(url + member.getUserId() + "\\");
         
         if (deleteDirectory(directory)) {
             log.info("폴더와 그 안의 모든 파일 및 폴더를 삭제했습니다.");
