@@ -26,4 +26,5 @@ public class UserTableDTO {
     private MultipartFile userImg;
     private String oldUserPwd; // - 이전 비밀번호 번호
 
+
 }
