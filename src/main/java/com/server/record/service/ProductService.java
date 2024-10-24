@@ -19,11 +19,17 @@ public class ProductService {
 
     // 메인페이지 12개 보여주기
     public List<Product> MainLP(){
-        // 12개만 보여주기
         return dao.MainViewLp();
     }
     public List<Product> MainRecode(){
         return dao.MainViewRecode();
+    }
+    // 페이지에서 보여줄거
+    public List<Product> AllViewLp(){
+        return dao.AllViewLp();
+    }
+    public List<Product> AllViewRecode(){
+        return dao.AllViewRecode();
     }
 
 }

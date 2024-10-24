@@ -17,5 +17,15 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     /*전체 레코드  (메인 화면)*/
     @Query(value="select * from product where product_type = '레코드' LIMIT 12",nativeQuery = true)
     List<Product> MainViewRecode();
+
+    // 페이지 들어가서 보여주기 (LP)
+    @Query(value="select * from product where product_type = 'LP'",nativeQuery = true)
+    List<Product> AllViewLp();
+
+    // 페이지 들어가서 보여주기 (LP)
+    @Query(value="select * from product where product_type = '레코드'",nativeQuery = true)
+    List<Product> AllViewRecode();
+
+
 }
 

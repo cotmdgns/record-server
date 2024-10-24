@@ -11,12 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -105,20 +108,44 @@ public class UserTableController {
         }
         return ResponseEntity.ok().build();
     }
-    @PostMapping("/upDataImgController")
-    public ResponseEntity userImgUpDatePut(@RequestParam("userCode") int userCode,
-                                           @RequestParam("userImg") MultipartFile userImg) throws IOException {
 
-        UserTable vo = service.UserIdCheck(userCode);
+    // 이미지 수정하면서 만약에 폴더가 생성이 안됬을경우를 위한 보험
+    @PutMapping("/upDataImgController")
+    public ResponseEntity userImgUpDatePut(UserTableDTO dto) throws IOException {
 
-        Path directoryPath = Paths.get(url + vo.getUserId() + "\\");
-        Path directoryProfile = Paths.get(url + vo.getUserId() + "\\userProfile");
-        log.info(""+Files.exists(directoryPath));
-        log.info(""+Files.exists(directoryProfile));
+        // 코드로 서버에서 해당 유저 정보 다 가져오기
+        UserTable vo = service.UserIdCheck(dto.getUserCode());
+        // 가져온 이미지 이름을 중복되지않게 랜덤 이름 넣어지기
+        String file = fileUpload(dto.getUserImg(),vo.getUserId());
+        // 안에 존재하냐
+        if(!vo.getUserImg().isEmpty()){
+            // 값이 널이 아니지?
+            if(vo.getUserImg()!=null){
+                // 그럼 이 주소로 해서
+                File imgDelete = new File(url + vo.getUserId() + File.separator + "userProfile" + File.separator + vo.getUserImg());
+                // 지울게
+                imgDelete.delete();
+            }
+        }
+        vo.setUserImg(file);
+        log.info("이게 뭘까야  : "+file);
+        service.userUpData(vo);
 
-        log.info(""+vo);
         return ResponseEntity.ok().build();
     }
+
+    // 가져온 파일을 UUID 로 랜덤 이름값 같이 붙여서 만들어주기
+    public String fileUpload(MultipartFile file, String id) throws IOException{
+        UUID uuid = UUID.randomUUID();
+        // 멀티파일로 가져온 이름 오리지널로 바꿔주면서 저장하기
+        String fileName = uuid.toString()+"_"+file.getOriginalFilename();
+        File copyFile = new File(url + id + File.separator + "userProfile" + File.separator + fileName);
+        file.transferTo(copyFile);
+        return fileName;
+    }
+
+
+
 
     // 아이디 삭제하기
     @DeleteMapping("/userDelete/{code}")
@@ -142,7 +169,7 @@ public class UserTableController {
             File[] files = directory.listFiles();
             // 널이 아닐때
             if (files != null) {
-                // 상향돈 for 문으로
+                // 향상된 for 문으로
                 for (File file : files) {
                     // 디렉토리인지 판단하고
                     if (file.isDirectory()) {

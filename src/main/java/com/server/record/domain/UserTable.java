@@ -39,6 +39,9 @@ public class UserTable {
 //    @Column(name="user_address")
 //    private String userAddress;
 
+    @Column(name="user_manager")
+    private String userManager;
+
     @Column(name="user_email")
     private String userEmail;
 
