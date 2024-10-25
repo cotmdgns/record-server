@@ -1,15 +1,13 @@
 package com.server.record.controller;
 
 import com.server.record.domain.Product;
+import com.server.record.domain.ProductDTO;
 import com.server.record.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +26,7 @@ public class ProductController {
     public ResponseEntity MainLP(){
         return ResponseEntity.status(HttpStatus.OK).body(service.MainLP());
     }
+
     @GetMapping("MainRecord")
     public ResponseEntity MainRecord(){
         return ResponseEntity.status(HttpStatus.OK).body(service.MainRecode());
@@ -41,5 +40,16 @@ public class ProductController {
     @GetMapping("AllViewRecord")
     public ResponseEntity AllViewRecord() {
         return ResponseEntity.status(HttpStatus.OK).body(service.AllViewRecode());
+    }
+
+    @PostMapping("CreateLpRecordProduct")
+    public ResponseEntity createProduct(ProductDTO dto){
+        log.info(""+ dto);
+        return ResponseEntity.ok().build();
+        // 화면에 뿌려지잖아
+        // 1000개 넘어
+        // 이 1000개 에서 방금 내가 만든 상품을 가져와서
+        // 이미지 코드에 넣고 다시 인설트해야지
+        // 1000
     }
 }

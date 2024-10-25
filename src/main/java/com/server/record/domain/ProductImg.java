@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 public class ProductImg {
 
     @Id
-    @Column(name="product_img")
-    private int productImg;
-
     @Column(name="product_img_code")
     private int productImgCode;
+
+    @Column(name="product_code")
+    private int productCode;
 
     @Column(name="product_img_address")
     private String productImgAddress;

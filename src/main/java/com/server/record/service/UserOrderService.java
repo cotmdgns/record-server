@@ -13,6 +13,8 @@ public class UserOrderService {
     @Autowired
     private UserOrderDAO dao;
 
+    
+    // 그냥 보여주기
     public List<UserOrder> userOrderList(String id) {
         return dao.userOrderList(id);
     }

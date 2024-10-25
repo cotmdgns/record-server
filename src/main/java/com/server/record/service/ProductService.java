@@ -1,6 +1,10 @@
 package com.server.record.service;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.server.record.domain.Product;
+import com.server.record.domain.ProductDTO;
 import com.server.record.repo.ProductDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,10 @@ public class ProductService {
     @Autowired
     private ProductDAO dao;
 
+//    @Autowired
+//    private JPAQueryFactory
+
+
     // 메인페이지 12개 보여주기
     public List<Product> MainLP(){
         return dao.MainViewLp();
@@ -31,5 +39,11 @@ public class ProductService {
     public List<Product> AllViewRecode(){
         return dao.AllViewRecode();
     }
+
+    public int CreateLpProduct(ProductDTO dto){
+//        Query
+        return 0;
+    }
+
 
 }
