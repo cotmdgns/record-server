@@ -2,6 +2,7 @@ package com.server.record.controller;
 
 import com.server.record.domain.Product;
 import com.server.record.domain.ProductDTO;
+import com.server.record.domain.ProductImg;
 import com.server.record.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,25 @@ public class ProductController {
 
     @PostMapping("CreateLpRecordProduct")
     public ResponseEntity createProduct(ProductDTO dto){
-        log.info(""+ dto);
+        // 빌드로 넣어주고
+        Product pro = Product.builder()
+                .productType(dto.getProductType())
+                .productName(dto.getProductName())
+                .productPrice(dto.getProductPrice())
+                .productExplanation(dto.getProductExplanation())
+                .productQuantity(dto.getProductQuantity())
+                .build();
+        // 서버에 보내준다음 코드를받아
+        int ProductCode = service.CreateLpProduct(pro);
+
+        // 그코드를 이미지에 넣어주고 이미지가 2장이상미면 이미지 갯수만큼 반복문 돌려서 이미지 갯수만큼 컬럼만들어주기
+        for(int i=0;i<dto.getProductImg().length;i++){
+            ProductImg img = ProductImg.builder()
+                    .productCode(ProductCode)
+                    .productImgAddress(String.valueOf(dto.getProductImg()[i].getOriginalFilename()))
+                    .build();
+            service.CreateImpProduct(img);
+        }
         return ResponseEntity.ok().build();
-        // 화면에 뿌려지잖아
-        // 1000개 넘어
-        // 이 1000개 에서 방금 내가 만든 상품을 가져와서
-        // 이미지 코드에 넣고 다시 인설트해야지
-        // 1000
     }
 }

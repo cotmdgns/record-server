@@ -28,5 +28,8 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     List<Product> AllViewRecode();
 
 
+    // 생성할떄 받아온 이름으로 코드찾기
+    @Query(value="select * from product where product_name = :product_name",nativeQuery = true)
+    Optional<Product> serverCheckProductName(@Param("product_name") String productName);
 }
 

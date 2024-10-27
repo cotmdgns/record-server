@@ -20,7 +20,7 @@ public class ProductDTO {
     private String productName;
     private String productPrice;
     private String productExplanation;
-    private String productQuantity;
+    private int productQuantity;
     private MultipartFile[] productImg;
 
 }
