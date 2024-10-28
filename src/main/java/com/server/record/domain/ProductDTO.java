@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,13 @@ public class ProductDTO {
     private String productPrice;
     private String productExplanation;
     private int productQuantity;
+    private String productLongtext;
+    
+    // 클라이언트에서 받을때 사용
     private MultipartFile[] productImg;
+    // 디테일 페이지 들어갈때 사용
+    private List<ProductImg> productImgALl;
+    // 상품페이지에서 하나만 보여줄때 사용
+    private String productImgOne;
 
 }

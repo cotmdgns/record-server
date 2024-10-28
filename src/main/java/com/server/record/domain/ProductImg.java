@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data @AllArgsConstructor
 @NoArgsConstructor @Entity @Builder
+@DynamicInsert
 public class ProductImg {
 
     @Id

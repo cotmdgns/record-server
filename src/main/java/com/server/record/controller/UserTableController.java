@@ -45,8 +45,6 @@ public class UserTableController {
             if(vo.getUserImg() == null){
                 vo.setUserImg("http://192.168.10.51:8084/ImageDefault/img-profile-default-"+ num + ".png");
             }
-            log.info("path : " + directoryPath);
-            log.info("path : " + directoryProfile);
             Files.createDirectories(directoryPath);
             Files.createDirectories(directoryProfile);
 
@@ -82,6 +80,7 @@ public class UserTableController {
         }
     }
 
+    // 수정하기
     @PutMapping("/upDataController")
     public ResponseEntity upDataController(@RequestBody UserTableDTO vo) {
         UserTable member = service.UserIdCheck(vo.getUserCode());
