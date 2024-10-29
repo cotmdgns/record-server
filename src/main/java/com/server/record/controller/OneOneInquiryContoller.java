@@ -26,7 +26,11 @@ public class OneOneInquiryContoller {
         List<OneOneInquiry> AllViewInquiry = service.AllViewOneOneInquiry();
         return ResponseEntity.ok().body(AllViewInquiry);
     }
-
+    // 디테일하나보기
+    @GetMapping("DetailOneOneView/{code}")
+    public ResponseEntity DetailOneOneView(@PathVariable int code){
+        return ResponseEntity.ok().body(service.DetailOneOneView(code));
+    }
 
 
     // 1:1 문의 만들기
