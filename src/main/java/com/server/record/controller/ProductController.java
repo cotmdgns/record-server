@@ -56,7 +56,7 @@ public class ProductController {
                 .productExplanation(product.getProductExplanation())
                 .productQuantity(product.getProductQuantity())
                 .productLongtext(product.getProductLongtext())
-                .productImgALl(productImg)
+                .productImgAll(productImg)
                 .build();
 
         return ResponseEntity.ok().body(productDTO);

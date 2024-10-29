@@ -28,7 +28,7 @@ public class ProductDTO {
     // 클라이언트에서 받을때 사용
     private MultipartFile[] productImg;
     // 디테일 페이지 들어갈때 사용
-    private List<ProductImg> productImgALl;
+    private List<ProductImg> productImgAll;
     // 상품페이지에서 하나만 보여줄때 사용
     private String productImgOne;
 
