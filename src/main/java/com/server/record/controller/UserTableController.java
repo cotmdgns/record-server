@@ -4,7 +4,7 @@ import com.server.record.domain.UserTable;
 import com.server.record.domain.UserTableDTO;
 import com.server.record.service.UserTableService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,13 +40,22 @@ public class UserTableController {
         // 회원가입 해당 유저 전용 이미지 만들기
         Path directoryPath = Paths.get(url + vo.getUserId() + "\\");
         Path directoryProfile = Paths.get(url + vo.getUserId() + "\\userProfile");
+
         try{
-            // 이미지가 없다면 디폴트값 넣기
-            if(vo.getUserImg() == null){
-                vo.setUserImg("http://192.168.10.51:8084/ImageDefault/img-profile-default-"+ num + ".png");
-            }
+
             Files.createDirectories(directoryPath);
             Files.createDirectories(directoryProfile);
+
+            // 이미지가 없다면 디폴트값 넣기
+            if(vo.getUserImg() == null){
+//                File copyFile = new File(url + dto.getUserId() + File.separator + "userProfile" + File.separator + fileName);
+//                dto.getUserImg().transferTo(copyFile);
+                File file = new File("\\\\192.168.10.51\\record\\ImageDefault\\img-profile-default-"+ num + ".png");
+                File newFile = new File(url + vo.getUserId() + "\\userProfile\\img-profile-default-"+ num + ".png");
+                FileUtils.copyFile(file, newFile);
+
+                vo.setUserImg("img-profile-default-"+ num + ".png");
+            }
 
             service.signup(vo);
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -115,7 +124,12 @@ public class UserTableController {
         // 코드로 서버에서 해당 유저 정보 다 가져오기
         UserTable vo = service.UserIdCheck(dto.getUserCode());
         // 가져온 이미지 이름을 중복되지않게 랜덤 이름 넣어지기
-        String file = fileUpload(dto.getUserImg(),vo.getUserId());
+        String fileName = fileUpload(dto.getUserImg());
+
+        // 가져온 파일 이름으로
+        File copyFile = new File(url + vo.getUserId() + File.separator + "userProfile" + File.separator + fileName);
+        dto.getUserImg().transferTo(copyFile);
+
         // 안에 존재하냐
         if(!vo.getUserImg().isEmpty()){
             // 값이 널이 아니지?
@@ -126,21 +140,18 @@ public class UserTableController {
                 imgDelete.delete();
             }
         }
-        vo.setUserImg(file);
-        log.info("이게 뭘까야  : "+file);
+        // 파일 주소넣기
+        vo.setUserImg(fileName);
         service.userUpData(vo);
 
         return ResponseEntity.ok().build();
     }
 
     // 가져온 파일을 UUID 로 랜덤 이름값 같이 붙여서 만들어주기
-    public String fileUpload(MultipartFile file, String id) throws IOException{
+    public String fileUpload(MultipartFile file) throws IOException{
         UUID uuid = UUID.randomUUID();
         // 멀티파일로 가져온 이름 오리지널로 바꿔주면서 저장하기
-        String fileName = uuid.toString()+"_"+file.getOriginalFilename();
-        File copyFile = new File(url + id + File.separator + "userProfile" + File.separator + fileName);
-        file.transferTo(copyFile);
-        return fileName;
+        return uuid.toString()+"_"+file.getOriginalFilename();
     }
 
 

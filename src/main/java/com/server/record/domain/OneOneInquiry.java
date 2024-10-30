@@ -23,8 +23,9 @@ public class OneOneInquiry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int oneOneInquiryCode;
 
-    @Column(name="user_code")
-    private int userCode;
+    @ManyToOne
+    @JoinColumn(name="user_code")
+    private UserTable userTable;
 
     @Column(name="one_one_inquiry_h1")
     private String oneOneInquiryH1;

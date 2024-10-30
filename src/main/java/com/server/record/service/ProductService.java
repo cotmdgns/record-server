@@ -40,10 +40,15 @@ public class ProductService {
     }
     //////////////////
     // 페이지에서 보여줄거
-    // 1. LP 전체 보여주기
-    public List<Product> AllViewLp(){
+    // 1. LP 전체 보여주기 (페이징)
+    public List<Product> AllPagingViewLp(int page){
+        return dao.AllPagingViewLp(page);
+    }
+    // Lp 카운터
+    public int AllViewLp(){
         return dao.AllViewLp();
     }
+
     // 2. 코드로 이미지 가져오기 ( 2.2 디테일 페이지에서도 재활용 가능함 )
     public List<ProductImg> AllViewLpImg(int productCode){return daoimg.productImg(productCode);}
     //////////////////

@@ -19,9 +19,13 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     @Query(value="select * from product where product_type = '레코드' LIMIT 12",nativeQuery = true)
     List<Product> MainViewRecode();
 
+    ////////////////////////////
     // 페이지 들어가서 보여주기 (LP)
-    @Query(value="select * from product where product_type = 'LP'",nativeQuery = true)
-    List<Product> AllViewLp();
+    @Query(value="select * from product where product_type = 'LP' limit :page ,4",nativeQuery = true)
+    List<Product> AllPagingViewLp(@Param("page")int page);
+    // 총 LP정부 갯수 (페이징에 들어감)
+    @Query(value="select count(*) from product where product_type = 'LP'",nativeQuery = true)
+    int AllViewLp();
 
     // 페이지 들어가서 보여주기 (LP)
     @Query(value="select * from product where product_type = '레코드'",nativeQuery = true)

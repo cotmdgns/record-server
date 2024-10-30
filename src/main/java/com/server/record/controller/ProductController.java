@@ -63,10 +63,11 @@ public class ProductController {
     }
 
     // LP상품 다보여주기
-    @GetMapping("AllViewLp")
-    public ResponseEntity AllViewLp() {
+    @GetMapping("AllViewLp/{no}")
+    public ResponseEntity AllViewLp(@PathVariable int no) {
+        log.info("" + no);
         // 서버에서 가져왔지만 이미지는 없기때문에 다시 product에 넣고
-        List<Product> product = service.AllViewLp();
+        List<Product> product = service.AllPagingViewLp(no);
         List<ProductDTO> products = new ArrayList<>();
         // 배열로 왔으니 반복문 돌려서
         for(Product Pd : product){
@@ -95,6 +96,12 @@ public class ProductController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
+    //LP 상품 카운터
+    @GetMapping("TotalPage")
+    public ResponseEntity totalPage(){
+        return ResponseEntity.ok().body(service.AllViewLp());
+    }
+
     @GetMapping("AllViewRecord")
     public ResponseEntity AllViewRecord() {
 

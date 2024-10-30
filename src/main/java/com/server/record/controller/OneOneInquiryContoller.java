@@ -2,7 +2,9 @@ package com.server.record.controller;
 
 import com.server.record.domain.OneOneInquiry;
 import com.server.record.domain.OneOneInquiryDTO;
+import com.server.record.domain.UserTable;
 import com.server.record.service.OneOneInquiryService;
+import com.server.record.service.UserTableService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class OneOneInquiryContoller {
     @Autowired
     private OneOneInquiryService service;
 
+    @Autowired
+    private UserTableService userTableService;
+
     // 모든 문의 보여주기
     @GetMapping("AllViewOneOneInquiry")
     public ResponseEntity AllViewOneOneInquiry() {
@@ -29,6 +34,7 @@ public class OneOneInquiryContoller {
     // 디테일하나보기
     @GetMapping("DetailOneOneView/{code}")
     public ResponseEntity DetailOneOneView(@PathVariable int code){
+        log.info(""+code);
         return ResponseEntity.ok().body(service.DetailOneOneView(code));
     }
 
@@ -36,8 +42,9 @@ public class OneOneInquiryContoller {
     // 1:1 문의 만들기
     @PostMapping("createOneOneInquiry")
     public ResponseEntity createOneOneInquiry(OneOneInquiryDTO dto) {
+        UserTable user = userTableService.UserIdCheck(dto.getUserCode());
         OneOneInquiry oneOneInquiry = OneOneInquiry.builder()
-                .userCode(dto.getUserCode())
+                .userTable(user)
                 .oneOneInquiryH1(dto.getOneOneInquiryH1())
                 .oneOneInquiryText(dto.getOneOneInquiryText())
                 .oneOneInquiryFile(dto.getOneOneInquiryFile().getOriginalFilename())
