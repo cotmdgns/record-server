@@ -48,7 +48,7 @@ public class UserTableController {
 
             // 이미지가 없다면 디폴트값 넣기
             if(vo.getUserImg() == null){
-//                File copyFile = new File(url + dto.getUserId() + File.separator + "userProfile" + File.separator + fileName);
+//                File copyFile = new File(url + vo.getUserId() + File.separator + "userProfile" + File.separator + fileName);
 //                dto.getUserImg().transferTo(copyFile);
                 File file = new File("\\\\192.168.10.51\\record\\ImageDefault\\img-profile-default-"+ num + ".png");
                 File newFile = new File(url + vo.getUserId() + "\\userProfile\\img-profile-default-"+ num + ".png");

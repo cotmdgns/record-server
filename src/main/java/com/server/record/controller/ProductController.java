@@ -118,6 +118,7 @@ public class ProductController {
         Path directoryPath = Paths.get(url + "\\Product\\" + dto.getProductType());
         Path directoryPathType = Paths.get(url + "\\Product\\" + dto.getProductType() + "\\"+ dto.getProductName());
         try{
+            //집에서 할때만 잠깐 끄기
             Files.createDirectories(directoryPath);
             Files.createDirectories(directoryPathType);
             // 빌드로 넣어주고
@@ -153,6 +154,7 @@ public class ProductController {
         UUID uuid = UUID.randomUUID();
         // 멀티파일로 가져온 이름 오리지널로 바꿔주면서 저장하기
         String fileName = uuid.toString()+"_"+file.getOriginalFilename();
+        //집에서 할때만 잠깐 끄기
         File copyFile = new File(url +File.separator + "Product"+ File.separator + product.getProductType() + File.separator + product.getProductName() + File.separator + fileName);
         file.transferTo(copyFile);
         return fileName;
