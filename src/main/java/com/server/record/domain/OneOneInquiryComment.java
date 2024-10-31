@@ -21,9 +21,8 @@ public class OneOneInquiryComment {
     @Column(name="one_one_inquiry_comment_comment")
     private int oneOneInquiryCommentComment;
 
-    @ManyToOne
-    @JoinColumn(name="one_one_inquiry_code")
-    private OneOneInquiry oneOneInquiry;
+    @Column(name="one_one_inquiry_code")
+    private int oneOneInquiryCode;
 
     @ManyToOne
     @JoinColumn(name="user_code")
