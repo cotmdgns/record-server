@@ -32,4 +32,7 @@ public class ProductDTO {
     // 상품페이지에서 하나만 보여줄때 사용
     private String productImgOne;
 
+    // 체크용도
+    private boolean pageCheck;
+
 }

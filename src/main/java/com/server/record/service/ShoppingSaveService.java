@@ -20,10 +20,14 @@ public class ShoppingSaveService {
     };
 
     // 찜하기 보여주기
-    public List<ShoppingSave> AllViewShoppingSave(String userCode){
+    public List<ShoppingSave> AllViewShoppingSave(int userCode){
         return dao.AllViewShoppingSave(userCode);
     };
 
+    // 페이지 들어오면 유저가 장바구니 추가한거 확인하기
+    public ShoppingSave userMemberSaveCheck (ShoppingSave save){
+        return dao.userMemberSaveCheck(save.getProductCode(), save.getUserCode());
+    }
 
 
 }

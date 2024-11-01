@@ -3,7 +3,9 @@ package com.server.record.controller;
 import com.server.record.domain.Product;
 import com.server.record.domain.ProductDTO;
 import com.server.record.domain.ProductImg;
+import com.server.record.domain.ShoppingSave;
 import com.server.record.service.ProductService;
+import com.server.record.service.ShoppingSaveService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class ProductController {
     @Autowired
     private ProductService service;
 
+    @Autowired
+    private ShoppingSaveService shoppingSaveService;
+
 
     private String url = "\\\\192.168.10.51\\record\\";
 
@@ -34,7 +39,20 @@ public class ProductController {
     // 이 두개는 메인페이지에서 12개정도만 보여는거
     @GetMapping("MainLP")
     public ResponseEntity MainLP(){
-        return ResponseEntity.status(HttpStatus.OK).body(service.MainLP());
+        List<ProductDTO> list = new ArrayList<>();
+        for(Product product : service.MainLP()){
+            List<ProductImg> mainImg = service.AllViewLpImg(product.getProductCode());
+
+            ProductDTO dto = ProductDTO.builder()
+                    .productCode(product.getProductCode())
+                    .productName(product.getProductName())
+                    .productPrice(product.getProductPrice())
+                    .productImgOne(mainImg.get(0).getProductImgAddress())
+                    .productQuantity(product.getProductQuantity())
+                    .build();
+            list.add(dto);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
     @GetMapping("MainRecord")
     public ResponseEntity MainRecord(){
@@ -43,7 +61,7 @@ public class ProductController {
 
     //디테일 LP상품 코드 보여주기
     @GetMapping("DetailViewLp/{code}")
-    public ResponseEntity DetailLp(@PathVariable int code){
+    public ResponseEntity DetailLp(@PathVariable int code, @RequestParam(name="userCode") int userCode){
         Product product = service.detailInformation(code);
 //        log.info("1. 정보가져오기 : " + product);
         List<ProductImg> productImg = service.AllViewLpImg(code);
@@ -59,13 +77,22 @@ public class ProductController {
                 .productImgAll(productImg)
                 .build();
 
+        ShoppingSave save = ShoppingSave.builder()
+                .productCode(code)
+                .userCode(userCode)
+                .build();
+
+        ShoppingSave as = shoppingSaveService.userMemberSaveCheck(save);
+
+        if(as!=null) {
+            productDTO.setPageCheck(true);
+        }
         return ResponseEntity.ok().body(productDTO);
     }
 
     // LP상품 다보여주기
     @GetMapping("AllViewLp/{no}")
     public ResponseEntity AllViewLp(@PathVariable int no) {
-        log.info("" + no);
         // 서버에서 가져왔지만 이미지는 없기때문에 다시 product에 넣고
         List<Product> product = service.AllPagingViewLp(no);
         List<ProductDTO> products = new ArrayList<>();
@@ -90,7 +117,7 @@ public class ProductController {
                     .productQuantity(Pd.getProductQuantity())
                     .productImgOne(proImg.get(0).getProductImgAddress())
                     .build();
-            log.info("2. " + dto);
+//            log.info("2. " + dto);
             products.add(dto);
 
         }
