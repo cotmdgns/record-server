@@ -1,9 +1,6 @@
 package com.server.record.controller;
 
-import com.server.record.domain.Product;
-import com.server.record.domain.ProductDTO;
-import com.server.record.domain.ProductImg;
-import com.server.record.domain.ShoppingSave;
+import com.server.record.domain.*;
 import com.server.record.service.ProductService;
 import com.server.record.service.ShoppingSaveService;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +63,11 @@ public class ProductController {
 //        log.info("1. 정보가져오기 : " + product);
         List<ProductImg> productImg = service.AllViewLpImg(code);
 //        log.info("2. 코드로 이미지들 싹다 가져오기 : " + productImg);
+        
+        // 코드로 추천하기 count로 가져오기
+        int productLike = service.productLike(code);
+        log.info(""+productLike);
+        
         ProductDTO productDTO = ProductDTO.builder()
                 .productCode(product.getProductCode())
                 .productType(product.getProductType())
@@ -75,18 +77,28 @@ public class ProductController {
                 .productQuantity(product.getProductQuantity())
                 .productLongtext(product.getProductLongtext())
                 .productImgAll(productImg)
+                .productSub(productLike)
                 .build();
 
+        // 장바구니 체크용
         ShoppingSave save = ShoppingSave.builder()
                 .productCode(code)
                 .userCode(userCode)
                 .build();
-
-        ShoppingSave as = shoppingSaveService.userMemberSaveCheck(save);
-
-        if(as!=null) {
+        ShoppingSave shoppingSave = shoppingSaveService.userMemberSaveCheck(save);
+        if(shoppingSave!=null) {
             productDTO.setPageCheck(true);
         }
+        // 추천하기 체크용
+        ProductLike productLikeCheck = ProductLike.builder()
+                .productCode(code)
+                .userCode(userCode)
+                .build();
+        if(productLikeCheck != null){
+            productDTO.setProductSubCheck(true);
+        }
+
+
         return ResponseEntity.ok().body(productDTO);
     }
 

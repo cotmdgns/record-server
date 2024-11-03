@@ -13,6 +13,7 @@ public interface ShoppingSaveDAO extends JpaRepository<ShoppingSave,Integer> {
     @Query(value = "select * from shopping_save where user_code = :code",nativeQuery = true)
     List<ShoppingSave> AllViewShoppingSave(@Param("code")int code);
 
+    // 장바구니 체크여부
     @Query(value = "select * from shopping_save where product_code = :productCode and user_code = :userCode;",nativeQuery = true)
     ShoppingSave userMemberSaveCheck(@Param("productCode")int productCode,@Param("userCode")int userCode);
 

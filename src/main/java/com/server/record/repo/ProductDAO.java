@@ -2,6 +2,7 @@ package com.server.record.repo;
 
 import com.server.record.domain.Product;
 import com.server.record.domain.ProductDTO;
+import com.server.record.domain.ProductLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,7 +40,13 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     @Query(value="select * from product where product_code = :code",nativeQuery = true)
     Product DetailInformation(@Param("code")int code);
 
+    // 상품코드로 추천하기 코드 count 로 가져오기
+    @Query(value = "select count(product_code) from product join product_like using (product_code) where product_code = :code",nativeQuery = true)
+    int productLike(@Param("code")int code);
 
+    // 유저코드로 추천하기 체크여부
+    @Query(value = "select * from product_like where user_code = :userCode and product_code = :productCode",nativeQuery = true)
+    ProductLike productLikeCheck(@Param("userCode")int userCode,@Param("productCode")int productCode);
 
 }
 

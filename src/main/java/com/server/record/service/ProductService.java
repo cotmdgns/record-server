@@ -2,6 +2,7 @@ package com.server.record.service;
 
 
 import com.server.record.domain.ProductImg;
+import com.server.record.domain.ProductLike;
 import com.server.record.repo.ProductImgDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -67,8 +68,14 @@ public class ProductService {
         Product product =  dao.DetailInformation(code);
         return product;
     }
-
-
+    // 2. 코드로 해당 페이지 추천하기 count로 가져오기
+    public int productLike(int code){
+        return dao.productLike(code);
+    }
+    // 3. 코드로 추천하기 체크여부 확인하기
+    public ProductLike productLikeCheck(ProductLike productLike){
+        return dao.productLikeCheck(productLike.getUserCode(),productLike.getProductCode());
+    }
 
 
 

@@ -19,6 +19,7 @@ public class UserOrderController {
     @Autowired
     private UserOrderService service;
 
+    // 결제한 정보들 나오게 만들기 ( 여기는 이걸로 종결 땅땅 )
     @GetMapping("userId/{id}")
     public ResponseEntity userId(@PathVariable String id){
         // 잘나오는거 확인 완료.

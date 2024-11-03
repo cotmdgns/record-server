@@ -34,5 +34,11 @@ public class ProductDTO {
 
     // 체크용도
     private boolean pageCheck;
+    
+    // 상품 코드로 추천하기? 가져오기
+    private int productSub;
+
+    // 삼품 코드로 추천하기 체크용도
+    private boolean productSubCheck;
 
 }
