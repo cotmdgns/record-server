@@ -2,13 +2,16 @@ package com.server.record.service;
 
 import com.server.record.domain.ShoppingSave;
 import com.server.record.domain.ShoppingSaveOrder;
+import com.server.record.domain.ShoppingSaveOrderDTO;
 import com.server.record.repo.ShoppingSaveDAO;
 import com.server.record.repo.ShoppingSaveOrderDAO;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Slf4j
 @Service
 public class ShoppingSaveService {
 
@@ -42,6 +45,12 @@ public class ShoppingSaveService {
     // 결제하고 해당 정보 결제페이지에서 보여줘야함
     public ShoppingSaveOrder viewCreateSaveOrder(int userCode){
         return daoOrder.viewSaveOrder(userCode);
+    }
+    // 페이지 나가면 자동으로 삭제하기
+    @Transactional
+    public void deleteCreateSaveOrder(ShoppingSaveOrder shoppingSaveOrder){
+        log.info("4.잘왔음? : " + shoppingSaveOrder);
+        daoOrder.deleteCreateSaveOrder(shoppingSaveOrder.getProductCode(),shoppingSaveOrder.getUserCode());
     }
     ////////
 }

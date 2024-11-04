@@ -1,7 +1,7 @@
 package com.server.record.controller;
 
-import com.server.record.domain.ShoppingSave;
-import com.server.record.domain.ShoppingSaveOrder;
+import com.server.record.domain.*;
+import com.server.record.service.ProductService;
 import com.server.record.service.ShoppingSaveService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
@@ -20,13 +20,16 @@ public class ShoppingSaveController {
     @Autowired
     private ShoppingSaveService service;
 
+    @Autowired
+    private ProductService productService;
+
     // 찜하기 생성하기
     @PostMapping("createShoppingSave")
     public ResponseEntity create(@RequestBody ShoppingSave shoppingSave){
         service.createShoppingSave(shoppingSave);
         return ResponseEntity.ok().build();
     };
-    // 삭제하기
+    // 삭제하기 ( 디테일 페이지에서 삭제하기 )
     @DeleteMapping("deleteShoppingSave")
     public ResponseEntity deleteShoppingSave (@RequestParam(name="userCode") int userCode,@RequestParam(name="productCode") int productCode){
 
@@ -53,12 +56,30 @@ public class ShoppingSaveController {
     // 결제하기 할때 만들어졌으면 결제 페이지에서 보여주기
     @GetMapping("createShoppingSaveOrderView/{userCode}")
     public ResponseEntity createShoppingSaveOrderView(@PathVariable int userCode){
-        service.viewCreateSaveOrder(userCode);
-        return ResponseEntity.ok().build();
+        log.info("1.1 정보들 : "+userCode);
+        // 코드로 정보 가져오기
+        ShoppingSaveOrder shoppingSaveOrder = service.viewCreateSaveOrder(userCode);
+        log.info("1. 정보들 : "+shoppingSaveOrder);
+
+        //상품코드로 찾아서 정보 가져와야함
+        Product product = productService.detailInformation(shoppingSaveOrder.getProductCode());
+        log.info("2. 정보들 : "+product);
+        // 상품코드로 이미지 가져오기
+//        List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
+//        log.info("3. 정보들 : "+productImgs);
+
+
+        return ResponseEntity.ok().body(0);
     }
     // 결제페이지 나가면 바로 삭제되게끔 만들기
     @DeleteMapping("createShoppingSaveOrderDelete")
-    public ResponseEntity createShoppingSaveOrderDelete(){
+    public ResponseEntity createShoppingSaveOrderDelete(@RequestParam(name="userCode") int userCode,@RequestParam(name="productCode") int productCode){
+        ShoppingSaveOrder shoppingSaveOrder = ShoppingSaveOrder.builder()
+                .userCode(userCode)
+                .productCode(productCode)
+                .build();
+        service.deleteCreateSaveOrder(shoppingSaveOrder);
+
         return ResponseEntity.ok().build();
     }
     //////

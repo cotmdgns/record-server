@@ -65,7 +65,7 @@ public class ProductService {
     // 디테일 페이지 들어가면 해당 정보 위한 단계
     // 1. 코드를 가져와서 해당정보 가져오기
     public Product detailInformation(int code){
-        Product product =  dao.DetailInformation(code);
+        Product product = dao.DetailInformation(code);
         return product;
     }
     // 2. 코드로 해당 페이지 추천하기 count로 가져오기

@@ -35,7 +35,6 @@ public class UserOrderController {
                     .orderStateCode(userOrder.getOrderStateCode())
                     .build());
         }
-        log.info("gd  :  " + dtoList);
         return ResponseEntity.ok().body(dtoList);
     };
 
