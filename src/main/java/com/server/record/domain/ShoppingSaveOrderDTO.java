@@ -14,11 +14,8 @@ import org.hibernate.annotations.DynamicInsert;
 @DynamicInsert
 public class ShoppingSaveOrderDTO {
 
-    private int productCode;
-    private String productName;
-    private int productPrice;
-    private String productExplanation;
-
+    private int shoppingOrderCode;
+    private Product product;
     // 이미지 하나 들어가기
     private String productImg;
 

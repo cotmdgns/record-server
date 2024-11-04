@@ -46,7 +46,7 @@ public class ShoppingSaveController {
         return ResponseEntity.ok().build();
     }
 
-    //////
+    ///////////////////// ( 유저가 바로 결제페이지로 들어갔을떄 )
     // 바로 결제하기 눌렀을때 생성되고
     @PostMapping("createShoppingSaveOrder")
     public ResponseEntity createShoppingSaveOrder(@RequestBody ShoppingSaveOrder shoppingSaveOrder){
@@ -56,22 +56,29 @@ public class ShoppingSaveController {
     // 결제하기 할때 만들어졌으면 결제 페이지에서 보여주기
     @GetMapping("createShoppingSaveOrderView/{userCode}")
     public ResponseEntity createShoppingSaveOrderView(@PathVariable int userCode){
-        log.info("1.1 정보들 : "+userCode);
+        log.info("0. 유저 코드 : "+userCode);
         // 코드로 정보 가져오기
         ShoppingSaveOrder shoppingSaveOrder = service.viewCreateSaveOrder(userCode);
-        log.info("1. 정보들 : "+shoppingSaveOrder);
+        log.info("1. 상품잘나옴 : "+shoppingSaveOrder);
 
         //상품코드로 찾아서 정보 가져와야함
         Product product = productService.detailInformation(shoppingSaveOrder.getProductCode());
-        log.info("2. 정보들 : "+product);
+        log.info("2. 상품정보 잘나옴 : "+product);
         // 상품코드로 이미지 가져오기
-//        List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
-//        log.info("3. 정보들 : "+productImgs);
+        List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
+        log.info("3. 정보들 : "+productImgs);
 
+        ShoppingSaveOrderDTO shoppingSaveOrderDTO = ShoppingSaveOrderDTO.builder()
+                .shoppingOrderCode(shoppingSaveOrder.getShoppingOrderCode())
+                .product(product)
+                .productImg(productImgs.get(0).getProductImgAddress())
+                .build();
 
-        return ResponseEntity.ok().body(0);
+        log.info("4. 종결 조합 : "+shoppingSaveOrderDTO);
+
+        return ResponseEntity.ok().body(shoppingSaveOrderDTO);
     }
-    // 결제페이지 나가면 바로 삭제되게끔 만들기
+    // 결제페이지 나가면 바로 삭제되게끔 만들기 or 결제 취소 눌렀을때
     @DeleteMapping("createShoppingSaveOrderDelete")
     public ResponseEntity createShoppingSaveOrderDelete(@RequestParam(name="userCode") int userCode,@RequestParam(name="productCode") int productCode){
         ShoppingSaveOrder shoppingSaveOrder = ShoppingSaveOrder.builder()
@@ -82,15 +89,25 @@ public class ShoppingSaveController {
 
         return ResponseEntity.ok().build();
     }
-    //////
+
+    // 결제하기 눌렀을떄 상황
+    @PostMapping("createProductOrder")
+    public ResponseEntity createProductOrder(@RequestBody ShoppingSaveOrder shoppingSaveOrder){
+        log.info("값 들어왓나 ? : " + shoppingSaveOrder);
+        // 이제 생성이 되면서
+        service.createProductOrder(shoppingSaveOrder.getProductCode(),shoppingSaveOrder.getUserCode());
+        // 삭제되게끔
+        service.deleteCreateSaveOrder(shoppingSaveOrder);
+        return ResponseEntity.ok().build();
+    }
+
+    ///////////////////
 
     // 유저 찜목록 체크 여부
     @GetMapping("/allViewShoppingSave/{userCode}")
     public ResponseEntity AllViewShoppingSave(@PathVariable int userCode){
         return ResponseEntity.ok().body(service.AllViewShoppingSave(userCode));
     }
-
-
 
 
 }
