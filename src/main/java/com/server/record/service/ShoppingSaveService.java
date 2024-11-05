@@ -1,9 +1,7 @@
 package com.server.record.service;
 
-import com.server.record.domain.ShoppingSave;
-import com.server.record.domain.ShoppingSaveOrder;
-import com.server.record.domain.ShoppingSaveOrderDTO;
-import com.server.record.domain.UserOrder;
+import com.server.record.domain.*;
+import com.server.record.repo.ProductDAO;
 import com.server.record.repo.ShoppingSaveDAO;
 import com.server.record.repo.ShoppingSaveOrderDAO;
 import com.server.record.repo.UserOrderDAO;
@@ -23,6 +21,8 @@ public class ShoppingSaveService {
     private ShoppingSaveOrderDAO daoOrder;
     @Autowired
     private UserOrderDAO daoUserOrder;
+    @Autowired
+    private ProductDAO productDAO;
     // 장바구니 생성하기
     public void createShoppingSave(ShoppingSave shoppingSave) {
         dao.save(shoppingSave);
@@ -42,7 +42,12 @@ public class ShoppingSaveService {
         return dao.userMemberSaveCheck(save.getProductCode(), save.getUserCode());
     }
 
-    ////////
+    // 장바구니에서 사용할 정보들
+    public Product ShoppingProductView(int code) {
+        return productDAO.ShoppingProductView(code);
+    }
+
+    //////// ( 바로 결제페이지 들어갈때 상황)
     // 바로 결제할때 생성되는 컬럼 ( 끝 )
     public void createShoppingSaveOrder(ShoppingSaveOrder shoppingSaveOrder){daoOrder.save(shoppingSaveOrder);}
     // 결제하고 해당 정보 결제페이지에서 보여줘야함 ( 끝 )
@@ -58,6 +63,18 @@ public class ShoppingSaveService {
     @Transactional
     public void createProductOrder(int product, int userCode){
         daoUserOrder.createProductOrder(product,userCode);
+    }
+    ////////
+
+    //////// ( 장바구니에서 결제페이지 들어갈때 상황)
+    // 장바구니 -> 결제페이지 갔을때 보여줄상황
+    public List<ShoppingSave> viewSaveproduct(int userCode) {
+        return dao.AllViewShoppingSave(userCode);
+    };
+
+    @Transactional
+    public void deleteCreateSave(int shoppingCode){
+        dao.deleteById(shoppingCode);
     }
     ////////
 }

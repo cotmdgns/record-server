@@ -48,6 +48,11 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     @Query(value = "select * from product_like where user_code = :userCode and product_code = :productCode",nativeQuery = true)
     ProductLike productLikeCheck(@Param("userCode")int userCode,@Param("productCode")int productCode);
 
+    // 장바구니에서 사용할 정보들
+    @Query(value="select * from product where product_code = :code",nativeQuery = true)
+    Product ShoppingProductView(@Param("code")int code);
+
+
 }
 
 

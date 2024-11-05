@@ -44,6 +44,7 @@ public class ProductController {
                     .productCode(product.getProductCode())
                     .productName(product.getProductName())
                     .productPrice(product.getProductPrice())
+                    .productType(product.getProductType())
                     .productImgOne(mainImg.get(0).getProductImgAddress())
                     .productQuantity(product.getProductQuantity())
                     .build();

@@ -3,12 +3,15 @@ package com.server.record.controller;
 import com.server.record.domain.*;
 import com.server.record.service.ProductService;
 import com.server.record.service.ShoppingSaveService;
+import com.server.record.service.UserTableService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +25,10 @@ public class ShoppingSaveController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserTableService userTableService;
+
 
     // 찜하기 생성하기
     @PostMapping("createShoppingSave")
@@ -56,31 +63,33 @@ public class ShoppingSaveController {
     // 결제하기 할때 만들어졌으면 결제 페이지에서 보여주기
     @GetMapping("createShoppingSaveOrderView/{userCode}")
     public ResponseEntity createShoppingSaveOrderView(@PathVariable int userCode){
-        log.info("0. 유저 코드 : "+userCode);
-        // 코드로 정보 가져오기
-        ShoppingSaveOrder shoppingSaveOrder = service.viewCreateSaveOrder(userCode);
-        log.info("1. 상품잘나옴 : "+shoppingSaveOrder);
+            //        log.info("0. 유저 코드 : "+userCode);
+            // 코드로 정보 가져오기
+            ShoppingSaveOrder shoppingSaveOrder = service.viewCreateSaveOrder(userCode);
+//        log.info("1. 상품잘나옴 : "+shoppingSaveOrder);
 
-        //상품코드로 찾아서 정보 가져와야함
-        Product product = productService.detailInformation(shoppingSaveOrder.getProductCode());
-        log.info("2. 상품정보 잘나옴 : "+product);
-        // 상품코드로 이미지 가져오기
-        List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
-        log.info("3. 정보들 : "+productImgs);
+            //상품코드로 찾아서 정보 가져와야함
+            Product product = productService.detailInformation(shoppingSaveOrder.getProductCode());
+//        log.info("2. 상품정보 잘나옴 : "+product);
+            // 상품코드로 이미지 가져오기
+            List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
+//        log.info("3. 정보들 : "+productImgs);
 
-        ShoppingSaveOrderDTO shoppingSaveOrderDTO = ShoppingSaveOrderDTO.builder()
-                .shoppingOrderCode(shoppingSaveOrder.getShoppingOrderCode())
-                .product(product)
-                .productImg(productImgs.get(0).getProductImgAddress())
-                .build();
+            ShoppingSaveOrderDTO shoppingSaveOrderDTO = ShoppingSaveOrderDTO.builder()
+                    .shoppingOrderCode(shoppingSaveOrder.getShoppingOrderCode())
+                    .product(product)
+                    .productImg(productImgs.get(0).getProductImgAddress())
+                    .build();
 
-        log.info("4. 종결 조합 : "+shoppingSaveOrderDTO);
+//        log.info("4. 종결 조합 : "+shoppingSaveOrderDTO);
+            return ResponseEntity.ok().body(shoppingSaveOrderDTO);
+        }
 
-        return ResponseEntity.ok().body(shoppingSaveOrderDTO);
-    }
     // 결제페이지 나가면 바로 삭제되게끔 만들기 or 결제 취소 눌렀을때
     @DeleteMapping("createShoppingSaveOrderDelete")
     public ResponseEntity createShoppingSaveOrderDelete(@RequestParam(name="userCode") int userCode,@RequestParam(name="productCode") int productCode){
+        log.info("" + userCode);
+        log.info("" + productCode);
         ShoppingSaveOrder shoppingSaveOrder = ShoppingSaveOrder.builder()
                 .userCode(userCode)
                 .productCode(productCode)
@@ -101,12 +110,43 @@ public class ShoppingSaveController {
         return ResponseEntity.ok().build();
     }
 
-    ///////////////////
+    /////////////////////
+    ///////////////////// ( 장바구니에서 결제페이지로 들어갔을때 )
+    // 유저 정보 보여주기
+    @GetMapping("createShoppingSaveView/{userCode}")
+    public ResponseEntity createShoppingSaveView(@PathVariable int userCode){
+        log.info("보여주기 : " + userCode);
+        return ResponseEntity.ok().build();
+    }
+    // 장바구니에서 삭제하기 눌렀을때 삭제되게끔 만들기
+    @DeleteMapping("createShoppingSaveDelete")
+    public ResponseEntity createShoppingSaveDelete(@RequestParam(name="shoppingCode") int shoppingCode) {
+        log.info("삭제 : " + shoppingCode);
+        service.deleteCreateSave(shoppingCode);
+        return ResponseEntity.ok().build();
+    }
+    /////////////////////
 
     // 유저 찜목록 체크 여부
     @GetMapping("/allViewShoppingSave/{userCode}")
     public ResponseEntity AllViewShoppingSave(@PathVariable int userCode){
-        return ResponseEntity.ok().body(service.AllViewShoppingSave(userCode));
+        // 유저 코드로 뽑아온걸 다시 담아서 보내기
+        List<ShoppingSave> shoppingSave = service.AllViewShoppingSave(userCode);
+        List<ShoppingSaveDTO> productList = new ArrayList<>();
+        for(ShoppingSave save : shoppingSave){
+            // 뽑아온 코드로 다시 정보 찾아오고
+            // DTO로 담아서 보내주기
+            Product product = service.ShoppingProductView(save.getProductCode());
+
+            ShoppingSaveDTO shoppingSaveDTO = ShoppingSaveDTO.builder()
+                    .shoppingCode(save.getShoppingCode())
+                    .userCode(save.getUserCode())
+                    .product(product)
+                    .build();
+            productList.add(shoppingSaveDTO);
+        }
+
+        return ResponseEntity.ok().body(productList);
     }
 
 
