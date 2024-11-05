@@ -88,8 +88,8 @@ public class ShoppingSaveController {
     // 결제페이지 나가면 바로 삭제되게끔 만들기 or 결제 취소 눌렀을때
     @DeleteMapping("createShoppingSaveOrderDelete")
     public ResponseEntity createShoppingSaveOrderDelete(@RequestParam(name="userCode") int userCode,@RequestParam(name="productCode") int productCode){
-        log.info("" + userCode);
-        log.info("" + productCode);
+//        log.info("" + userCode);
+//        log.info("" + productCode);
         ShoppingSaveOrder shoppingSaveOrder = ShoppingSaveOrder.builder()
                 .userCode(userCode)
                 .productCode(productCode)
@@ -102,7 +102,7 @@ public class ShoppingSaveController {
     // 결제하기 눌렀을떄 상황
     @PostMapping("createProductOrder")
     public ResponseEntity createProductOrder(@RequestBody ShoppingSaveOrder shoppingSaveOrder){
-        log.info("값 들어왓나 ? : " + shoppingSaveOrder);
+//        log.info("값 들어왓나 ? : " + shoppingSaveOrder);
         // 이제 생성이 되면서
         service.createProductOrder(shoppingSaveOrder.getProductCode(),shoppingSaveOrder.getUserCode());
         // 삭제되게끔
@@ -115,21 +115,35 @@ public class ShoppingSaveController {
     // 유저 정보 보여주기
     @GetMapping("createShoppingSaveView/{userCode}")
     public ResponseEntity createShoppingSaveView(@PathVariable int userCode){
-        log.info("보여주기 : " + userCode);
+//        log.info("보여주기 : " + userCode);
         return ResponseEntity.ok().build();
     }
     // 장바구니에서 삭제하기 눌렀을때 삭제되게끔 만들기
     @DeleteMapping("createShoppingSaveDelete")
     public ResponseEntity createShoppingSaveDelete(@RequestParam(name="shoppingCode") int shoppingCode) {
-        log.info("삭제 : " + shoppingCode);
+//        log.info("삭제 : " + shoppingCode);
         service.deleteCreateSave(shoppingCode);
         return ResponseEntity.ok().build();
     }
+    // 합계 금액 보여주기
+    @GetMapping("viewOrderPrice")
+    public ResponseEntity viewOrderPrice(@RequestParam(name="userCode") int userCode) {
+        log.info("1. " + userCode);
+        List<Integer> price = service.viewOrderPrice(userCode);
+        int sumPrice = 0;
+        for(Integer sum : price){
+            sumPrice += sum;
+        }
+        log.info("2. " + sumPrice);
+        return ResponseEntity.ok().body(sumPrice);
+    }
+
     /////////////////////
 
     // 유저 찜목록 체크 여부
     @GetMapping("/allViewShoppingSave/{userCode}")
     public ResponseEntity AllViewShoppingSave(@PathVariable int userCode){
+//        log.info("" + userCode);
         // 유저 코드로 뽑아온걸 다시 담아서 보내기
         List<ShoppingSave> shoppingSave = service.AllViewShoppingSave(userCode);
         List<ShoppingSaveDTO> productList = new ArrayList<>();
@@ -138,10 +152,13 @@ public class ShoppingSaveController {
             // DTO로 담아서 보내주기
             Product product = service.ShoppingProductView(save.getProductCode());
 
+            List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
+
             ShoppingSaveDTO shoppingSaveDTO = ShoppingSaveDTO.builder()
                     .shoppingCode(save.getShoppingCode())
                     .userCode(save.getUserCode())
                     .product(product)
+                    .productImg(productImgs.get(0).getProductImgAddress())
                     .build();
             productList.add(shoppingSaveDTO);
         }

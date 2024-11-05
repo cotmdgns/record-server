@@ -37,8 +37,8 @@ public class OneOneInquiryContoller {
     // 디테일하나보기
     @GetMapping("DetailOneOneView/{code}")
     public ResponseEntity DetailOneOneView(@PathVariable int code) {
-        log.info("" + code);
-        log.info("" +service.DetailOneOneView(code));
+//        log.info("" + code);
+//        log.info("" +service.DetailOneOneView(code));
         return ResponseEntity.ok().body(service.DetailOneOneView(code));
     }
 

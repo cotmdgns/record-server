@@ -72,9 +72,14 @@ public class ShoppingSaveService {
         return dao.AllViewShoppingSave(userCode);
     };
 
+    // 장바구니에서 삭제눌렸을때 상황
     @Transactional
     public void deleteCreateSave(int shoppingCode){
         dao.deleteById(shoppingCode);
+    }
+    // 합계금액 보여주기위한 서비스
+    public List<Integer> viewOrderPrice(int userCode){
+        return daoOrder.viewOrderPrice(userCode);
     }
     ////////
 }

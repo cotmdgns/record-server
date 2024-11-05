@@ -41,4 +41,9 @@ public class OneOneInquiry {
 
     @Column(name="one_one_inquiry_state")
     private int oneOneInquiryState;
+
+
+
+
+
 }

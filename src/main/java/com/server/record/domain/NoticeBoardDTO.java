@@ -2,22 +2,25 @@ package com.server.record.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.time.LocalDateTime;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @DynamicInsert
-public class ShoppingSaveDTO {
+public class NoticeBoardDTO {
 
-    private int shoppingCode;
-    private Product product;
-    private int userCode;
-    private String productImg;
+    private int noticeBoardCode;
+    private int userTable;
+    private String noticeBoardH1;
+    private String noticeBoardText;
 
 }
