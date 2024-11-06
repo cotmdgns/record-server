@@ -18,6 +18,7 @@ public interface ShoppingSaveDAO extends JpaRepository<ShoppingSave,Integer> {
     @Query(value = "select * from shopping_save where product_code = :productCode and user_code = :userCode;",nativeQuery = true)
     ShoppingSave userMemberSaveCheck(@Param("productCode")int productCode,@Param("userCode")int userCode);
 
+    // 삭제하기
     @Modifying
     @Query(value = "DELETE FROM shopping_save_order where product_code = :productCode and user_code = :userCode",nativeQuery = true)
     void deleteCreateSave(@Param("productCode")int productCode,@Param("userCode")int userCode);

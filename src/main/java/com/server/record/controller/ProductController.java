@@ -33,7 +33,7 @@ public class ProductController {
     private String url = "\\\\192.168.10.51\\record\\";
 
 
-    // 이 두개는 메인페이지에서 12개정도만 보여는거
+    // 이 두개는 메인페이지에서 10개정도만 보여는거
     @GetMapping("MainLP")
     public ResponseEntity MainLP(){
         List<ProductDTO> list = new ArrayList<>();
@@ -155,12 +155,10 @@ public class ProductController {
     public ResponseEntity createProduct(ProductDTO dto){
         // 일단 에디터에 들어온 이미지랑 테그들은 잘 들어옴
 
-        Path directoryPath = Paths.get(url + "\\Product\\" + dto.getProductType());
-        Path directoryPathType = Paths.get(url + "\\Product\\" + dto.getProductType() + "\\"+ dto.getProductName());
+        log.info(""+ dto);
+
         try{
-            //집에서 할때만 잠깐 끄기
-            Files.createDirectories(directoryPath);
-            Files.createDirectories(directoryPathType);
+
             // 빌드로 넣어주고
             Product pro = Product.builder()
                     .productType(dto.getProductType())
@@ -171,15 +169,26 @@ public class ProductController {
                     .productLongtext(dto.getProductLongtext())
                     .build();
             // 서버에 보내준다음 코드를받아
-            int ProductCode = service.CreateLpProduct(pro);
+            Product productCode = service.CreateLpProduct(pro);
 
+
+            Path directoryPath = Paths.get(url + "\\Product\\" + dto.getProductType());
+            Path directoryPathType = Paths.get(url + "\\Product\\" + dto.getProductType() + "\\"+ productCode.getProductCode());
+
+            //집에서 할때만 잠깐 끄기
+            Files.createDirectories(directoryPath);
+            Files.createDirectories(directoryPathType);
+
+            log.info("1. "+ productCode);
             // 그코드를 이미지에 넣어주고 이미지가 2장이상미면 이미지 갯수만큼 반복문 돌려서 이미지 갯수만큼 컬럼만들어주기
             for(int i=0;i<dto.getProductImg().length;i++){
-                String UUIDFileName  = fileUpload(dto.getProductImg()[i],pro);
+                String UUIDFileName = fileUpload(dto.getProductImg()[i],productCode);
                 ProductImg img = ProductImg.builder()
-                        .productCode(ProductCode)
+                        .productCode(productCode.getProductCode())
                         .productImgAddress(UUIDFileName)
                         .build();
+
+                log.info("2. " + img);
                 // 서버에 만들면서 파일 업로드하기
                 service.CreateImpProduct(img);
             }
@@ -195,8 +204,10 @@ public class ProductController {
         // 멀티파일로 가져온 이름 오리지널로 바꿔주면서 저장하기
         String fileName = uuid.toString()+"_"+file.getOriginalFilename();
         //집에서 할때만 잠깐 끄기
-        File copyFile = new File(url +File.separator + "Product"+ File.separator + product.getProductType() + File.separator + product.getProductName() + File.separator + fileName);
+        File copyFile = new File(url +File.separator + "Product"+ File.separator + product.getProductType() + File.separator + product.getProductCode() + File.separator + fileName);
         file.transferTo(copyFile);
         return fileName;
     }
 }
+
+

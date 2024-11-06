@@ -63,17 +63,17 @@ public class ShoppingSaveController {
     // 결제하기 할때 만들어졌으면 결제 페이지에서 보여주기
     @GetMapping("createShoppingSaveOrderView/{userCode}")
     public ResponseEntity createShoppingSaveOrderView(@PathVariable int userCode){
-            //        log.info("0. 유저 코드 : "+userCode);
+                    log.info("0. 유저 코드 : "+userCode);
             // 코드로 정보 가져오기
             ShoppingSaveOrder shoppingSaveOrder = service.viewCreateSaveOrder(userCode);
-//        log.info("1. 상품잘나옴 : "+shoppingSaveOrder);
+        log.info("1. 상품잘나옴 : "+shoppingSaveOrder);
 
             //상품코드로 찾아서 정보 가져와야함
             Product product = productService.detailInformation(shoppingSaveOrder.getProductCode());
 //        log.info("2. 상품정보 잘나옴 : "+product);
             // 상품코드로 이미지 가져오기
             List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
-//        log.info("3. 정보들 : "+productImgs);
+        log.info("3. 정보들 : "+productImgs);
 
             ShoppingSaveOrderDTO shoppingSaveOrderDTO = ShoppingSaveOrderDTO.builder()
                     .shoppingOrderCode(shoppingSaveOrder.getShoppingOrderCode())
@@ -81,7 +81,7 @@ public class ShoppingSaveController {
                     .productImg(productImgs.get(0).getProductImgAddress())
                     .build();
 
-//        log.info("4. 종결 조합 : "+shoppingSaveOrderDTO);
+        log.info("4. 종결 조합 : "+shoppingSaveOrderDTO);
             return ResponseEntity.ok().body(shoppingSaveOrderDTO);
         }
 

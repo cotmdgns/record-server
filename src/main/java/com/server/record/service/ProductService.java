@@ -82,24 +82,18 @@ public class ProductService {
 
 
     // 제품 컬럼 생성하기
-    public int CreateLpProduct(Product product){
+    public Product CreateLpProduct(Product product){
         // 제품 생성하기
-        log.info("1 : "+ product);
+//        log.info("1 : "+ product);
         Product pro = dao.save(product);
-        log.info("2 : "+ pro);
-        // 생성하면서 제품이름으로 코드 가져오기
-        return ProductCode(pro.getProductName());
+//        log.info("2 : "+ pro);
+        return pro;
     }
     // 컨트롤에서 다시 코드와 이미지 가져와서 만들어주기 (서버)
     public void CreateImpProduct(ProductImg productImg){
         daoimg.save(productImg);
     }
 
-    // 제품 만들어주면 code를 안주기때문에 직접 클라이언트에서 받아온 name으로 서버에가서 찾은다음 직접 코드 가져오기 ( 잘못설정해서 코드가 안오는거였음 )
-    public int ProductCode(String productCode){
-        Optional<Product> pd = dao.serverCheckProductName(productCode);
-        return pd.get().getProductCode();
-    }
 
 
 
