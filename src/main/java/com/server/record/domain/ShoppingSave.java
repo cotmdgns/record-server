@@ -27,4 +27,9 @@ public class ShoppingSave {
     @Column(name="user_code")
     private int userCode;
 
+    @Column(name="shopping_quantity")
+    private int shoppingQuantity;
+
+    @Column(name="address_code")
+    private int addressCode;
 }

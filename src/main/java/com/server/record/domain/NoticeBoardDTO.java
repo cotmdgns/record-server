@@ -19,8 +19,9 @@ import java.time.LocalDateTime;
 public class NoticeBoardDTO {
 
     private int noticeBoardCode;
-    private int userTable;
+    private UserTable userTable;
     private String noticeBoardH1;
     private String noticeBoardText;
+    private LocalDateTime noticeBoardCreated;
 
 }

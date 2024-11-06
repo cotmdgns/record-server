@@ -19,19 +19,19 @@ import java.time.LocalDateTime;
 @DynamicInsert
 public class NoticeBoard {
     @Id
-    @Column(name="noticeBoard_code")
+    @Column(name="notice_board_code")
     private int noticeBoardCode;
 
-//    @Column(name="userCode")
-//    private UserTable userTable;
+    @Column(name="user_code")
+    private int userCode;
 
-    @Column(name="noticeBoard_h1")
+    @Column(name="notice_board_h1")
     private String noticeBoardH1;
 
-    @Column(name="noticeBoard_text")
+    @Column(name="notice_board_text")
     private String noticeBoardText;
 
-    @Column(name="noticeBoard_created")
+    @Column(name="notice_board_created")
     private LocalDateTime noticeBoardCreated;
 
 }

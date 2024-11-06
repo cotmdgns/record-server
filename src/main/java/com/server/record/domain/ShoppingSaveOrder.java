@@ -27,4 +27,10 @@ public class ShoppingSaveOrder {
     @Column(name="user_code")
     private int userCode;
 
+    @Column(name="shopping_order_quantity")
+    private int shoppingOrderQuantity;
+
+    @Column(name="address_code")
+    private int addressCode;
+
 }
