@@ -29,7 +29,6 @@ public class UserOrderController {
             dtoList.add(UserOrderDTO.builder()
                     .orderCode(userOrder.getOrderCode())
                     .product(userOrder.getProduct())
-                    .usedProductCode(userOrder.getUsedProductCode())
                     .userOrderCreated(String.valueOf(userOrder.getUserOrderCreated()).substring(0,10))
                     .userTable(userOrder.getUserTable())
                     .orderStateCode(userOrder.getOrderStateCode())

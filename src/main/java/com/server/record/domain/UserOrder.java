@@ -24,9 +24,6 @@ public class UserOrder {
     @JoinColumn(name="product_code")
     private Product product;
 
-    @Column(name="Used_product_code")
-    private int usedProductCode;
-
     @Column(name="user_order_created")
     private LocalDateTime userOrderCreated;
 
