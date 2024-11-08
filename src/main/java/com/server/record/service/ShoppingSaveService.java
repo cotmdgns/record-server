@@ -54,15 +54,15 @@ public class ShoppingSaveService {
     public ShoppingSaveOrder viewCreateSaveOrder(int userCode){
         return daoOrder.viewSaveOrder(userCode);
     }
-    // 페이지 나가면 자동으로 삭제하기 ( 끝 )
+    // 페이지 나가면 자동으로 삭제하기 or 버튼 눌렀을때( 끝 )
     @Transactional
     public void deleteCreateSaveOrder(ShoppingSaveOrder shoppingSaveOrder){
         daoOrder.deleteCreateSaveOrder(shoppingSaveOrder.getProductCode(),shoppingSaveOrder.getUserCode());
     }
     // 결제하기 버튼 눌렀을떄 생성
     @Transactional
-    public void createProductOrder(int product, int userCode){
-        daoUserOrder.createProductOrder(product,userCode);
+    public void createProductOrder(ShoppingSaveOrder shoppingSaveOrder){
+        daoUserOrder.createProductOrder(shoppingSaveOrder.getProductCode(),shoppingSaveOrder.getUserCode(),shoppingSaveOrder.getAddressCode());
     }
     ////////
 
@@ -80,6 +80,11 @@ public class ShoppingSaveService {
     // 합계금액 보여주기위한 서비스
     public List<Integer> viewOrderPrice(int userCode){
         return daoOrder.viewOrderPrice(userCode);
+    }
+    // 결제페이지에서 사용할 로직 ( 결제 누르면 생성되고 삭제되고 )
+    @Transactional
+    public void deleteCreateSaveOrders(ShoppingSaveOrder shoppingSaveOrder){
+        daoOrder.deleteCreateSaveOrders(shoppingSaveOrder.getProductCode(),shoppingSaveOrder.getUserCode());
     }
     ////////
 }

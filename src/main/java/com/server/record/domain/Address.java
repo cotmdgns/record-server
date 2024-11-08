@@ -24,19 +24,25 @@ public class Address {
     @Column(name ="user_code")
     private int userCode;
 
-    @Column(name ="address_user_zip")
-    private int addressUserZip;
+    @Column
+    private String zonecode;
 
-    @Column(name ="address_user_address_detail")
-    private int addressUserAddressDetail;
+    @Column(name ="road_address")
+    private String roadAddress;
 
-    @Column(name ="address_user_phone")
-    private int addressUserPhone;
+    @Column(name ="jibunAddress")
+    private String jibunAddress;
+
+    @Column(name ="address_detail")
+    private String addressDetail;
+
+    @Column(name ="address_phone")
+    private String addressPhone;
 
     @Column(name ="address_user_state")
     private int addressUserState;
 
-    @Column(name ="address_user_details")
-    private int addressUserDetails;
+    @Column(name ="address_user_start_code")
+    private int addressUserStartCode;
 
 }

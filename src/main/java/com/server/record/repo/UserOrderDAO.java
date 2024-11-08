@@ -20,8 +20,8 @@ public interface UserOrderDAO extends JpaRepository<UserOrder,Integer> {
 
     // 생성하기
     @Modifying
-    @Query(value ="INSERT INTO user_order (product_code, user_code) VALUES (:productCode,:userCode)",nativeQuery = true)
-    void createProductOrder(@Param("productCode")int productCode,@Param("userCode")int userCode);
+    @Query(value ="INSERT INTO user_order (product_code, user_code,address_code) VALUES (:productCode,:userCode,:address_code)",nativeQuery = true)
+    void createProductOrder(@Param("productCode")int productCode,@Param("userCode")int userCode,@Param("address_code")int addressCode);
     
     
 }

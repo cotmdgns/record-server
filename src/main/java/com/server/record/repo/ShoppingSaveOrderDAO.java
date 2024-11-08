@@ -21,6 +21,11 @@ public interface ShoppingSaveOrderDAO extends JpaRepository<ShoppingSaveOrder,In
     @Query(value = "DELETE FROM shopping_save_order where product_code = :productCode and user_code = :userCode",nativeQuery = true)
     void deleteCreateSaveOrder(@Param("productCode")int productCode,@Param("userCode")int userCode);
 
+    // 삭제하기 ( 장바구니 용도 )
+    @Modifying
+    @Query(value = "DELETE FROM shopping_save where product_code = :productCode and user_code = :userCode",nativeQuery = true)
+    void deleteCreateSaveOrders(@Param("productCode")int productCode,@Param("userCode")int userCode);
+
     // 합계 금액 보여주기위한 쿼리
     @Query(value ="select product_price from shopping_save join product using (product_code) where user_code = :code;",nativeQuery = true)
     List<Integer> viewOrderPrice(@Param("code")int code);

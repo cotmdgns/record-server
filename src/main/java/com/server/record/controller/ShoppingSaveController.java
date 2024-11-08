@@ -63,14 +63,14 @@ public class ShoppingSaveController {
     // 결제하기 할때 만들어졌으면 결제 페이지에서 보여주기
     @GetMapping("createShoppingSaveOrderView/{userCode}")
     public ResponseEntity createShoppingSaveOrderView(@PathVariable int userCode){
-                    log.info("0. 유저 코드 : "+userCode);
-            // 코드로 정보 가져오기
+         log.info("0. 유저 코드 : "+userCode);
+         // 코드로 정보 가져오기
             ShoppingSaveOrder shoppingSaveOrder = service.viewCreateSaveOrder(userCode);
         log.info("1. 상품잘나옴 : "+shoppingSaveOrder);
 
-            //상품코드로 찾아서 정보 가져와야함
+        //상품코드로 찾아서 정보 가져와야함
             Product product = productService.detailInformation(shoppingSaveOrder.getProductCode());
-//        log.info("2. 상품정보 잘나옴 : "+product);
+        log.info("2. 상품정보 잘나옴 : "+product);
             // 상품코드로 이미지 가져오기
             List<ProductImg> productImgs = productService.AllViewLpImg(product.getProductCode());
         log.info("3. 정보들 : "+productImgs);
@@ -102,13 +102,33 @@ public class ShoppingSaveController {
     // 결제하기 눌렀을떄 상황
     @PostMapping("createProductOrder")
     public ResponseEntity createProductOrder(@RequestBody ShoppingSaveOrder shoppingSaveOrder){
-//        log.info("값 들어왓나 ? : " + shoppingSaveOrder);
+        log.info("값 들어왓나 ? : " + shoppingSaveOrder);
         // 이제 생성이 되면서
-        service.createProductOrder(shoppingSaveOrder.getProductCode(),shoppingSaveOrder.getUserCode());
+        service.createProductOrder(shoppingSaveOrder);
         // 삭제되게끔
         service.deleteCreateSaveOrder(shoppingSaveOrder);
         return ResponseEntity.ok().build();
     }
+
+    // ( 장바구니 )결제하기 눌렀을떄 상황
+    @PostMapping("createProductOrders")
+    public ResponseEntity createProductOrders(@RequestBody ShoppingSaveOrderDTO shoppingSaveOrderDTO){
+//        log.info("값 들어왓나 ? : " + shoppingSaveOrderDTO);
+        //productCode 수만큼 반복문 돌린다음
+        for(int i =0;i<shoppingSaveOrderDTO.getProductCode().length;i++ ){
+            ShoppingSaveOrder shoppingSaveOrder = ShoppingSaveOrder.builder()
+                    .userCode(shoppingSaveOrderDTO.getUserCode())
+                    .addressCode(shoppingSaveOrderDTO.getAddressCode())
+                    .productCode(shoppingSaveOrderDTO.getProductCode()[i])
+                    .build();
+
+            service.createProductOrder(shoppingSaveOrder);
+            service.deleteCreateSaveOrders(shoppingSaveOrder);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
 
     /////////////////////
     ///////////////////// ( 장바구니에서 결제페이지로 들어갔을때 )

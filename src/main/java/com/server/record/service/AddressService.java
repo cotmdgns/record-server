@@ -13,10 +13,15 @@ public class AddressService {
     @Autowired
     private AddressDAO dao;
 
-    // 유저 정보 가져오기
+    // 유저 정보 가져오기 ( 모달 )
     public List<Address> allAddress(int userCode){
         return dao.allAddress(userCode);
     }
+    // 유저 정보 가져오기
+    public Address viewAddress(Address address){
+        return dao.viewAddress(address.getUserCode(),address.getAddressUserState());
+    }
+
 
     // 주소 정보 가져와서 만들기
     public void createAddress(Address address){

@@ -21,5 +21,8 @@ public class ShoppingSaveOrderDTO {
 
 
 
-
+    // 장바구니 받는 용도
+    private int[] productCode;
+    private int userCode;
+    private int addressCode;
 }
