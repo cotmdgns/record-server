@@ -34,11 +34,12 @@ public class ProductController {
 
 
     // 이 두개는 메인페이지에서 10개정도만 보여는거
+    // LP
     @GetMapping("MainLP")
     public ResponseEntity MainLP(){
         List<ProductDTO> list = new ArrayList<>();
         for(Product product : service.MainLP()){
-            List<ProductImg> mainImg = service.AllViewLpImg(product.getProductCode());
+            List<ProductImg> mainImg = service.AllViewImg(product.getProductCode());
 
             ProductDTO dto = ProductDTO.builder()
                     .productCode(product.getProductCode())
@@ -52,67 +53,39 @@ public class ProductController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
+    // Record
     @GetMapping("MainRecord")
     public ResponseEntity MainRecord(){
-        return ResponseEntity.status(HttpStatus.OK).body(service.MainRecode());
-    }
+        List<ProductDTO> list = new ArrayList<>();
+        for(Product product : service.MainRecode()){
+            List<ProductImg> mainImg = service.AllViewImg(product.getProductCode());
 
-    //디테일 LP상품 코드 보여주기
-    @GetMapping("DetailViewLp/{code}")
-    public ResponseEntity DetailLp(@PathVariable int code, @RequestParam(name="userCode") int userCode){
-        Product product = service.detailInformation(code);
-//        log.info("1. 정보가져오기 : " + product);
-        List<ProductImg> productImg = service.AllViewLpImg(code);
-//        log.info("2. 코드로 이미지들 싹다 가져오기 : " + productImg);
-        
-        // 코드로 추천하기 count로 가져오기
-        int productLike = service.productLike(code);
-        log.info(""+productLike);
-        
-        ProductDTO productDTO = ProductDTO.builder()
-                .productCode(product.getProductCode())
-                .productType(product.getProductType())
-                .productName(product.getProductName())
-                .productPrice(product.getProductPrice())
-                .productExplanation(product.getProductExplanation())
-                .productQuantity(product.getProductQuantity())
-                .productLongtext(product.getProductLongtext())
-                .productImgAll(productImg)
-                .productSub(productLike)
-                .build();
-
-        // 장바구니 체크용
-        ShoppingSave save = ShoppingSave.builder()
-                .productCode(code)
-                .userCode(userCode)
-                .build();
-        ShoppingSave shoppingSave = shoppingSaveService.userMemberSaveCheck(save);
-        if(shoppingSave!=null) {
-            productDTO.setPageCheck(true);
+            ProductDTO dto = ProductDTO.builder()
+                    .productCode(product.getProductCode())
+                    .productName(product.getProductName())
+                    .productPrice(product.getProductPrice())
+                    .productType(product.getProductType())
+//                    .productImgOne(mainImg.get(0).getProductImgAddress())
+                    .productQuantity(product.getProductQuantity())
+                    .build();
+            list.add(dto);
         }
-        // 추천하기 체크용
-        ProductLike productLikeCheck = ProductLike.builder()
-                .productCode(code)
-                .userCode(userCode)
-                .build();
-        if(productLikeCheck != null){
-            productDTO.setProductSubCheck(true);
-        }
-
-
-        return ResponseEntity.ok().body(productDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
-
+    ////////////////////////////////////////////////////////////////////////////////////////// LP 및 레코드 페이징 및 보여주기
     // LP상품 다보여주기
-    @GetMapping("AllViewLp/{no}")
-    public ResponseEntity AllViewLp(@PathVariable int no) {
-        // 서버에서 가져왔지만 이미지는 없기때문에 다시 product에 넣고
-        List<Product> product = service.AllPagingViewLp(no);
-        List<ProductDTO> products = new ArrayList<>();
-        // 배열로 왔으니 반복문 돌려서
-        for(Product Pd : product){
-            //해당 코드로 서버에 있는 이미지 매핑? 하기
-            List<ProductImg> proImg= service.AllViewLpImg(Pd.getProductCode());
+    @GetMapping("AllView")
+    public ResponseEntity AllViewLp(@RequestParam("no")int no, @RequestParam("productType")String productType) {
+
+        /////// LP 실행
+        if(productType.equals("LP")){
+            // 서버에서 가져왔지만 이미지는 없기때문에 다시 product에 넣고
+            List<Product> product = service.AllPagingViewLp(no);
+            List<ProductDTO> products = new ArrayList<>();
+            // 배열로 왔으니 반복문 돌려서
+            for(Product Pd : product){
+                //해당 코드로 서버에 있는 이미지 매핑? 하기
+                List<ProductImg> proImg= service.AllViewImg(Pd.getProductCode());
 
 //            // 이미지를 가져왔으면 다시 배열로 담아서
 //            // 근데 왜 이렇게 했냐 라고 하면 이미지가 2장 이상이기 때문에
@@ -120,33 +93,122 @@ public class ProductController {
 //            for(int i =0;i<proImg.size();i++){
 //                img[i] = proImg.get(i).getProductImgAddress();
 //            }
-            //dto 에 넣어주기
-            ProductDTO dto = ProductDTO.builder()
-                    .productCode(Pd.getProductCode())
-                    .productType(Pd.getProductType())
-                    .productName(Pd.getProductName())
-                    .productPrice(Pd.getProductPrice())
-                    .productExplanation(Pd.getProductExplanation())
-                    .productQuantity(Pd.getProductQuantity())
-                    .productImgOne(proImg.get(0).getProductImgAddress())
-                    .build();
+                //dto 에 넣어주기
+                ProductDTO dto = ProductDTO.builder()
+                        .productCode(Pd.getProductCode())
+                        .productType(Pd.getProductType())
+                        .productName(Pd.getProductName())
+                        .productPrice(Pd.getProductPrice())
+                        .productExplanation(Pd.getProductExplanation())
+                        .productQuantity(Pd.getProductQuantity())
+//                        .productImgOne(proImg.get(0).getProductImgAddress())
+                        .build();
 //            log.info("2. " + dto);
-            products.add(dto);
+                products.add(dto);
 
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(products);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(products);
+        /////// 레코드 실행
+        if(productType.equals("레코드")){
+            // 서버에서 가져왔지만 이미지는 없기때문에 다시 product에 넣고
+            List<Product> product = service.AllPagingViewRecord(no);
+            log.info("1 : " + product);
+            List<ProductDTO> products = new ArrayList<>();
+            // 배열로 왔으니 반복문 돌려서
+            for(Product Pd : product){
+                //해당 코드로 서버에 있는 이미지 매핑? 하기
+                List<ProductImg> proImg= service.AllViewImg(Pd.getProductCode());
+
+//            // 이미지를 가져왔으면 다시 배열로 담아서
+//            // 근데 왜 이렇게 했냐 라고 하면 이미지가 2장 이상이기 때문에
+//            String[] img = new String[proImg.size()];
+//            for(int i =0;i<proImg.size();i++){
+//                img[i] = proImg.get(i).getProductImgAddress();
+//            }
+                //dto 에 넣어주기
+                ProductDTO dto = ProductDTO.builder()
+                        .productCode(Pd.getProductCode())
+                        .productType(Pd.getProductType())
+                        .productName(Pd.getProductName())
+                        .productPrice(Pd.getProductPrice())
+                        .productExplanation(Pd.getProductExplanation())
+                        .productQuantity(Pd.getProductQuantity())
+//                        .productImgOne(proImg.get(0).getProductImgAddress())
+                        .build();
+//            log.info("2. " + dto);
+                products.add(dto);
+
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
-    //LP 상품 카운터
-    @GetMapping("TotalPage")
-    public ResponseEntity totalPage(){
-        return ResponseEntity.ok().body(service.AllViewLp());
+    //LP 상품 페이지
+    @GetMapping("TotalPage/{type}")
+    public ResponseEntity TotalPage (@PathVariable String type){
+        if(type.equals("LP")){
+            return ResponseEntity.ok().body(service.AllViewLp());
+        }
+        if(type.equals("레코드")){
+            return ResponseEntity.ok().body(service.AllViewRecode());
+        }
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("AllViewRecord")
-    public ResponseEntity AllViewRecord() {
 
-        return ResponseEntity.status(HttpStatus.OK).body(service.AllViewRecode());
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //디테일 LP상품 코드 보여주기
+    @GetMapping("DetailView/{code}")
+    public ResponseEntity DetailView(@PathVariable int code, @RequestParam(name="userCode") int userCode){
+//        log.info("1. 정보가져오기 : " + productType);
+
+            Product product = service.detailInformation(code);
+//        log.info("1. 정보가져오기 : " + product);
+            List<ProductImg> productImg = service.AllViewImg(code);
+//        log.info("2. 코드로 이미지들 싹다 가져오기 : " + productImg);
+
+            // 코드로 추천하기 count로 가져오기
+            int productLike = service.productLike(code);
+            log.info(""+productLike);
+
+            ProductDTO productDTO = ProductDTO.builder()
+                    .productCode(product.getProductCode())
+                    .productType(product.getProductType())
+                    .productName(product.getProductName())
+                    .productPrice(product.getProductPrice())
+                    .productExplanation(product.getProductExplanation())
+                    .productQuantity(product.getProductQuantity())
+                    .productLongtext(product.getProductLongtext())
+                    .productImgAll(productImg)
+                    .productSub(productLike)
+                    .build();
+
+            // 장바구니 체크용
+            ShoppingSave save = ShoppingSave.builder()
+                    .productCode(code)
+                    .userCode(userCode)
+                    .build();
+            ShoppingSave shoppingSave = shoppingSaveService.userMemberSaveCheck(save);
+            if(shoppingSave!=null) {
+                productDTO.setPageCheck(true);
+            }
+            // 추천하기 체크용
+            ProductLike productLikeCheck = ProductLike.builder()
+                    .productCode(code)
+                    .userCode(userCode)
+                    .build();
+            if(productLikeCheck != null){
+                productDTO.setProductSubCheck(true);
+            }
+
+
+            return ResponseEntity.ok().body(productDTO);
+
     }
+
+
+
 
 
     
@@ -208,6 +270,14 @@ public class ProductController {
         file.transferTo(copyFile);
         return fileName;
     }
+
+
+
+
 }
+
+
+
+
 
 

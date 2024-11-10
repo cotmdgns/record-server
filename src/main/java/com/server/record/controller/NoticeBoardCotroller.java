@@ -57,5 +57,10 @@ public class NoticeBoardCotroller {
         service.createNoticeBoard(dto);
         return ResponseEntity.ok().build();
     }
+    // 디테일 정보가져오기
+    @GetMapping("detailViewNoticeBoard/{code}")
+    public ResponseEntity detailViewNoticeBoard(@PathVariable int code){
+        return ResponseEntity.ok().body(service.detailView(code));
+    }
 
 }

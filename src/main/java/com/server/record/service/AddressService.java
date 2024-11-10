@@ -21,8 +21,6 @@ public class AddressService {
     public Address viewAddress(Address address){
         return dao.viewAddress(address.getUserCode(),address.getAddressUserState());
     }
-
-
     // 주소 정보 가져와서 만들기
     public void createAddress(Address address){
         dao.save(address);

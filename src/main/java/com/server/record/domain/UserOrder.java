@@ -27,6 +27,10 @@ public class UserOrder {
     @Column(name="user_order_created")
     private LocalDateTime userOrderCreated;
 
+    @ManyToOne
+    @JoinColumn(name="address_code")
+    private Address address;
+
     // 유저 테이블 조인키
     @ManyToOne
     @JoinColumn(name="user_code")

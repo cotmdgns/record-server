@@ -16,8 +16,11 @@ import org.hibernate.annotations.DynamicInsert;
 public class ShoppingSaveDTO {
 
     private int shoppingCode;
-    private Product product;
+    private int productCode;
     private int userCode;
-    private String productImg;
+    private String productType;
+    private int productCount; // 갯수
 
+    private String productImg;
+    private Product product;
 }

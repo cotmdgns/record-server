@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductDAO extends JpaRepository<Product,Integer> {
-
+    ////////////////////////////  ( 전체보기 )
     /*전체 LP판  (메인 화면)*/
     @Query(value="SELECT * FROM product WHERE product_type = 'LP' LIMIT 10", nativeQuery = true)
     List<Product> MainViewLp();
@@ -20,17 +20,23 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     @Query(value="select * from product where product_type = '레코드' LIMIT 10",nativeQuery = true)
     List<Product> MainViewRecode();
 
-    ////////////////////////////
+    ////////////////////////////  ( 레코드 , LP ) 디테일에서 보여주면서 페이징 처리
     // 페이지 들어가서 보여주기 (LP)
     @Query(value="select * from product where product_type = 'LP' limit :page ,16",nativeQuery = true)
     List<Product> AllPagingViewLp(@Param("page")int page);
-    // 총 LP정부 갯수 (페이징에 들어감)
+    // 총 LP 갯수 (페이징에 들어감)
     @Query(value="select count(*) from product where product_type = 'LP'",nativeQuery = true)
     int AllViewLp();
 
-    // 페이지 들어가서 보여주기 (LP)
-    @Query(value="select * from product where product_type = '레코드'",nativeQuery = true)
-    List<Product> AllViewRecode();
+
+    // 페이지 들어가서 보여주기 (레코드)
+    @Query(value="select * from product where product_type = '레코드' limit :page ,16",nativeQuery = true)
+    List<Product> AllPagingViewRecord(@Param("page")int page);
+    // 총 레코드 갯수 (페이징에 들어감)
+    @Query(value="select count(*) from product where product_type = '레코드'",nativeQuery = true)
+    int AllViewRecord();
+
+
 
     // 생성할떄 받아온 이름으로 코드찾기
     @Query(value="select * from product where product_name = :product_name",nativeQuery = true)

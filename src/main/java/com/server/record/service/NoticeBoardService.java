@@ -22,4 +22,9 @@ public class NoticeBoardService {
         dao.save(noticeBoard);
     }
 
+    // 디테일 정보 찾기
+    public NoticeBoard detailView(int code){
+        return dao.findById(code).get();
+    }
+
 }

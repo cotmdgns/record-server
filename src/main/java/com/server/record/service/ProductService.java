@@ -45,22 +45,32 @@ public class ProductService {
     public List<Product> AllPagingViewLp(int page){
         return dao.AllPagingViewLp(page);
     }
-    // Lp 카운터
+    // Lp 페이지
     public int AllViewLp(){
         return dao.AllViewLp();
     }
-
-    // 2. 코드로 이미지 가져오기 ( 2.2 디테일 페이지에서도 재활용 가능함 )
-    public List<ProductImg> AllViewLpImg(int productCode){return daoimg.productImg(productCode);}
-    //////////////////
-
     //////////////////
     // 페이지에서 보여줄거
-    // LP 전체 보여주기
-    public List<Product> AllViewRecode(){
-        return dao.AllViewRecode();
+    // 1. 레코드 전체 보여주기 (페이징)
+    public List<Product> AllPagingViewRecord(int page){
+        return dao.AllPagingViewRecord(page);
+    }
+    // 레코드 페이지
+    public int AllViewRecode(){
+        return dao.AllViewRecord();
     }
     //////////////////
+
+    //코드로 이미지 가져오기 ( 2.2 디테일 페이지에서도 재활용 가능함 )
+    public List<ProductImg> AllViewImg(int productCode){
+        return daoimg.productImg(productCode);
+    }
+
+    // 결제했을떄 업데이트
+    public void productUpData(Product product){
+        dao.save(product);
+    }
+
 
     // 디테일 페이지 들어가면 해당 정보 위한 단계
     // 1. 코드를 가져와서 해당정보 가져오기
