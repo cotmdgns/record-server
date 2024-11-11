@@ -31,7 +31,8 @@ public class UserOrderController {
     public ResponseEntity userId(@PathVariable String id){
         // 잘나오는거 확인 완료.
         List<UserOrderDTO> dtoList = new ArrayList<>();
-
+        log.info("정보 : " + id);
+        log.info("정보 : " + service.userOrderList(id));
         for(UserOrder userOrder : service.userOrderList(id)){
             log.info("정보 : " + userOrder);
 

@@ -101,7 +101,7 @@ public class ProductController {
                         .productPrice(Pd.getProductPrice())
                         .productExplanation(Pd.getProductExplanation())
                         .productQuantity(Pd.getProductQuantity())
-//                        .productImgOne(proImg.get(0).getProductImgAddress())
+                        .productImgOne(proImg.get(0).getProductImgAddress())
                         .build();
 //            log.info("2. " + dto);
                 products.add(dto);
@@ -120,12 +120,6 @@ public class ProductController {
                 //해당 코드로 서버에 있는 이미지 매핑? 하기
                 List<ProductImg> proImg= service.AllViewImg(Pd.getProductCode());
 
-//            // 이미지를 가져왔으면 다시 배열로 담아서
-//            // 근데 왜 이렇게 했냐 라고 하면 이미지가 2장 이상이기 때문에
-//            String[] img = new String[proImg.size()];
-//            for(int i =0;i<proImg.size();i++){
-//                img[i] = proImg.get(i).getProductImgAddress();
-//            }
                 //dto 에 넣어주기
                 ProductDTO dto = ProductDTO.builder()
                         .productCode(Pd.getProductCode())
@@ -134,7 +128,7 @@ public class ProductController {
                         .productPrice(Pd.getProductPrice())
                         .productExplanation(Pd.getProductExplanation())
                         .productQuantity(Pd.getProductQuantity())
-//                        .productImgOne(proImg.get(0).getProductImgAddress())
+                        .productImgOne(proImg.get(0).getProductImgAddress())
                         .build();
 //            log.info("2. " + dto);
                 products.add(dto);

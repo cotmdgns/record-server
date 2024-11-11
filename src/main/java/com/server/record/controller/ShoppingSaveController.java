@@ -162,7 +162,7 @@ public class ShoppingSaveController {
     @GetMapping("createShoppingSaveViewList/{userCode}")
     public ResponseEntity createShoppingSaveViewList(@PathVariable int userCode){
         List<ShoppingSave> shoppingSave = service.AllViewShoppingSave(userCode);
-        log.info("" + shoppingSave.size());
+//        log.info("" + shoppingSave.size());
         return ResponseEntity.ok().body(shoppingSave.size());
     }
     // 장바구니에서 삭제하기 눌렀을때 삭제되게끔 만들기
