@@ -29,45 +29,6 @@ public class ShoppingSaveController {
     @Autowired
     private UserTableService userTableService;
 
-
-    // 찜하기 생성하기
-    @PostMapping("createShoppingSave")
-    public ResponseEntity create(@RequestBody ShoppingSaveDTO shoppingSaveDto){
-        log.info("확인용 : " + shoppingSaveDto);
-
-        if(shoppingSaveDto.getProductType().equals("LP")){
-            service.createShoppingSave(ShoppingSave.builder()
-                    .productCode(shoppingSaveDto.getProductCode())
-                    .userCode(shoppingSaveDto.getUserCode())
-                    .build());
-        }
-        if(shoppingSaveDto.getProductType().equals("Record")){
-            service.createShoppingSave(ShoppingSave.builder()
-                    .productCode(shoppingSaveDto.getProductCode())
-                    .userCode(shoppingSaveDto.getUserCode())
-                    .build());
-        }
-        return ResponseEntity.ok().build();
-    };
-    // 삭제하기 ( 디테일 페이지에서 삭제하기 )
-    @DeleteMapping("deleteShoppingSave")
-    public ResponseEntity deleteShoppingSave (@RequestParam(name="userCode") int userCode,@RequestParam(name="productCode") int productCode,@RequestParam(name="productType") String productType){
-        log.info(" 삭제 확인용 : " + productType);
-//        log.info("1. 유저 코드 : "+ userCode);
-//        log.info("2. 상품 코드 : "+ productCode);
-        if(productType.equals("LP")){
-            ShoppingSave shoppingSave = ShoppingSave.builder()
-                    .productCode(productCode)
-                    .userCode(userCode)
-                    .build();
-//        log.info("3. 상품 정보 : "+ shoppingSave);
-            ShoppingSave userProductSave = service.userMemberSaveCheck(shoppingSave);
-
-            service.DeleteProductSave(userProductSave.getShoppingCode());
-        }
-        return ResponseEntity.ok().build();
-    }
-
     ///////////////////// ( 유저가 바로 결제페이지로 들어갔을떄 )
     // 바로 결제하기 눌렀을때 생성되고
     @PostMapping("createShoppingSaveOrder")
@@ -78,25 +39,19 @@ public class ShoppingSaveController {
     // 결제하기 할때 만들어졌으면 결제 페이지에서 보여주기
     @GetMapping("createShoppingSaveOrderView/{userCode}")
     public ResponseEntity createShoppingSaveOrderView(@PathVariable int userCode){
-         log.info("0. 유저 코드 : "+userCode);
-         // 코드로 정보 가져오기
+            // 코드로 정보 가져오기
             ShoppingSaveOrder shoppingSaveOrder = service.viewCreateSaveOrder(userCode);
-        log.info("1. 상품잘나옴 : "+shoppingSaveOrder);
 
-        //상품코드로 찾아서 정보 가져와야함
+            //상품코드로 찾아서 정보 가져와야함
             Product product = productService.detailInformation(shoppingSaveOrder.getProductCode());
-        log.info("2. 상품정보 잘나옴 : "+product);
             // 상품코드로 이미지 가져오기
             List<ProductImg> productImgs = productService.AllViewImg(product.getProductCode());
-        log.info("3. 정보들 : "+productImgs);
 
             ShoppingSaveOrderDTO shoppingSaveOrderDTO = ShoppingSaveOrderDTO.builder()
                     .shoppingOrderCode(shoppingSaveOrder.getShoppingOrderCode())
                     .product(product)
                     .productImg(productImgs.get(0).getProductImgAddress())
                     .build();
-
-        log.info("4. 종결 조합 : "+shoppingSaveOrderDTO);
             return ResponseEntity.ok().body(shoppingSaveOrderDTO);
         }
 
@@ -123,7 +78,7 @@ public class ShoppingSaveController {
         int count = product.getProductQuantity();
         product.setProductQuantity(count - 1);
         productService.productUpData(product);
-        
+
         // 이제 생성이 되면서
         service.createProductOrder(shoppingSaveOrder);
         // 삭제되게끔
@@ -131,23 +86,56 @@ public class ShoppingSaveController {
         return ResponseEntity.ok().build();
     }
 
+    // 장바구니 생성하기 ( 디테일 페이지 )
+    @PostMapping("createShoppingSave")
+    public ResponseEntity create(@RequestBody ShoppingSaveDTO shoppingSaveDto){
+        log.info("확인용 : " + shoppingSaveDto);
+
+        if(shoppingSaveDto.getProductType().equals("LP")){
+            service.createShoppingSave(ShoppingSave.builder()
+                    .productCode(shoppingSaveDto.getProductCode())
+                    .userCode(shoppingSaveDto.getUserCode())
+                    .build());
+        }
+        if(shoppingSaveDto.getProductType().equals("Record")){
+            service.createShoppingSave(ShoppingSave.builder()
+                    .productCode(shoppingSaveDto.getProductCode())
+                    .userCode(shoppingSaveDto.getUserCode())
+                    .build());
+        }
+        return ResponseEntity.ok().build();
+    };
+    // 삭제하기 ( 디테일 페이지에서 삭제하기 )
+    @DeleteMapping("deleteShoppingSave")
+    public ResponseEntity deleteShoppingSave (@RequestParam(name="userCode") int userCode,
+                                              @RequestParam(name="productCode") int productCode,
+                                              @RequestParam(name="productType") String productType){
+        if(productType.equals("LP")){
+            ShoppingSave shoppingSave = ShoppingSave.builder()
+                    .productCode(productCode)
+                    .userCode(userCode)
+                    .build();
+            ShoppingSave userProductSave = service.userMemberSaveCheck(shoppingSave);
+
+            service.DeleteProductSave(userProductSave.getShoppingCode());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
     // ( 장바구니 )결제하기 눌렀을떄 상황
     @PostMapping("createProductOrders")
     public ResponseEntity createProductOrders(@RequestBody ShoppingSaveOrderDTO shoppingSaveOrderDTO){
-//        log.info("값 들어왓나 ? : " + shoppingSaveOrderDTO);
-        //productCode 수만큼 반복문 돌린다음
         for(int i =0;i<shoppingSaveOrderDTO.getProductCode().length;i++ ){
             Product product = productService.detailInformation(shoppingSaveOrderDTO.getProductCode()[i]);
             int count = product.getProductQuantity();
             product.setProductQuantity(count - 1);
             productService.productUpData(product);
-
             ShoppingSaveOrder shoppingSaveOrder = ShoppingSaveOrder.builder()
                     .userCode(shoppingSaveOrderDTO.getUserCode())
                     .addressCode(shoppingSaveOrderDTO.getAddressCode())
                     .productCode(shoppingSaveOrderDTO.getProductCode()[i])
                     .build();
-
             service.createProductOrder(shoppingSaveOrder);
             service.deleteCreateSaveOrders(shoppingSaveOrder);
         }

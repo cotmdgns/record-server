@@ -65,7 +65,7 @@ public class ProductController {
                     .productName(product.getProductName())
                     .productPrice(product.getProductPrice())
                     .productType(product.getProductType())
-//                    .productImgOne(mainImg.get(0).getProductImgAddress())
+                    .productImgOne(mainImg.get(0).getProductImgAddress())
                     .productQuantity(product.getProductQuantity())
                     .build();
             list.add(dto);
@@ -76,24 +76,11 @@ public class ProductController {
     // LP상품 다보여주기
     @GetMapping("AllView")
     public ResponseEntity AllViewLp(@RequestParam("no")int no, @RequestParam("productType")String productType) {
-
-        /////// LP 실행
         if(productType.equals("LP")){
-            // 서버에서 가져왔지만 이미지는 없기때문에 다시 product에 넣고
             List<Product> product = service.AllPagingViewLp(no);
             List<ProductDTO> products = new ArrayList<>();
-            // 배열로 왔으니 반복문 돌려서
             for(Product Pd : product){
-                //해당 코드로 서버에 있는 이미지 매핑? 하기
                 List<ProductImg> proImg= service.AllViewImg(Pd.getProductCode());
-
-//            // 이미지를 가져왔으면 다시 배열로 담아서
-//            // 근데 왜 이렇게 했냐 라고 하면 이미지가 2장 이상이기 때문에
-//            String[] img = new String[proImg.size()];
-//            for(int i =0;i<proImg.size();i++){
-//                img[i] = proImg.get(i).getProductImgAddress();
-//            }
-                //dto 에 넣어주기
                 ProductDTO dto = ProductDTO.builder()
                         .productCode(Pd.getProductCode())
                         .productType(Pd.getProductType())
@@ -103,24 +90,15 @@ public class ProductController {
                         .productQuantity(Pd.getProductQuantity())
                         .productImgOne(proImg.get(0).getProductImgAddress())
                         .build();
-//            log.info("2. " + dto);
                 products.add(dto);
-
             }
             return ResponseEntity.status(HttpStatus.OK).body(products);
         }
-        /////// 레코드 실행
         if(productType.equals("레코드")){
-            // 서버에서 가져왔지만 이미지는 없기때문에 다시 product에 넣고
             List<Product> product = service.AllPagingViewRecord(no);
-            log.info("1 : " + product);
             List<ProductDTO> products = new ArrayList<>();
-            // 배열로 왔으니 반복문 돌려서
             for(Product Pd : product){
-                //해당 코드로 서버에 있는 이미지 매핑? 하기
                 List<ProductImg> proImg= service.AllViewImg(Pd.getProductCode());
-
-                //dto 에 넣어주기
                 ProductDTO dto = ProductDTO.builder()
                         .productCode(Pd.getProductCode())
                         .productType(Pd.getProductType())
@@ -130,9 +108,7 @@ public class ProductController {
                         .productQuantity(Pd.getProductQuantity())
                         .productImgOne(proImg.get(0).getProductImgAddress())
                         .build();
-//            log.info("2. " + dto);
                 products.add(dto);
-
             }
             return ResponseEntity.status(HttpStatus.OK).body(products);
         }
@@ -209,13 +185,8 @@ public class ProductController {
     // 제품 만들기 ( LP, 레코드 )
     @PostMapping("CreateLpRecordProduct")
     public ResponseEntity createProduct(ProductDTO dto){
-        // 일단 에디터에 들어온 이미지랑 테그들은 잘 들어옴
-
-        log.info(""+ dto);
 
         try{
-
-            // 빌드로 넣어주고
             Product pro = Product.builder()
                     .productType(dto.getProductType())
                     .productName(dto.getProductName())
@@ -224,28 +195,21 @@ public class ProductController {
                     .productQuantity(dto.getProductQuantity())
                     .productLongtext(dto.getProductLongtext())
                     .build();
-            // 서버에 보내준다음 코드를받아
             Product productCode = service.CreateLpProduct(pro);
-
 
             Path directoryPath = Paths.get(url + "\\Product\\" + dto.getProductType());
             Path directoryPathType = Paths.get(url + "\\Product\\" + dto.getProductType() + "\\"+ productCode.getProductCode());
 
-            //집에서 할때만 잠깐 끄기
             Files.createDirectories(directoryPath);
             Files.createDirectories(directoryPathType);
 
             log.info("1. "+ productCode);
-            // 그코드를 이미지에 넣어주고 이미지가 2장이상미면 이미지 갯수만큼 반복문 돌려서 이미지 갯수만큼 컬럼만들어주기
             for(int i=0;i<dto.getProductImg().length;i++){
                 String UUIDFileName = fileUpload(dto.getProductImg()[i],productCode);
                 ProductImg img = ProductImg.builder()
                         .productCode(productCode.getProductCode())
                         .productImgAddress(UUIDFileName)
                         .build();
-
-                log.info("2. " + img);
-                // 서버에 만들면서 파일 업로드하기
                 service.CreateImpProduct(img);
             }
         }catch(Exception e){

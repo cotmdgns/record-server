@@ -19,7 +19,7 @@ public class UserTableService {
     public void signup(UserTable vo){
         dao.save(vo);
     }
-    // 로그인 후 아이디 체크
+    // 로그인 정보가지고 아이디 체크
     public UserTable login(String id, String pwd){
         UserTable member = dao.login(id,pwd).get();
         return member;

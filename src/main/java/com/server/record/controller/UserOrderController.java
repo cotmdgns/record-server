@@ -26,16 +26,10 @@ public class UserOrderController {
     private ProductService productService;
 
 
-    // 결제한 정보들 나오게 만들기 ( 이걸로 종결 땅땅 )
     @GetMapping("userId/{id}")
     public ResponseEntity userId(@PathVariable String id){
-        // 잘나오는거 확인 완료.
         List<UserOrderDTO> dtoList = new ArrayList<>();
-        log.info("정보 : " + id);
-        log.info("정보 : " + service.userOrderList(id));
         for(UserOrder userOrder : service.userOrderList(id)){
-            log.info("정보 : " + userOrder);
-
             dtoList.add(UserOrderDTO.builder()
                     .orderCode(userOrder.getOrderCode())
                     .product(userOrder.getProduct())
@@ -45,9 +39,7 @@ public class UserOrderController {
                     .userTable(userOrder.getUserTable())
                     .orderStateCode(userOrder.getOrderStateCode())
                     .build());
-
         }
-
         return ResponseEntity.ok().body(dtoList);
     };
 
