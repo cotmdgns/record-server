@@ -50,7 +50,6 @@ public class OneOneInquiryContoller {
                 .userTable(user)
                 .oneOneInquiryH1(dto.getOneOneInquiryH1())
                 .oneOneInquiryText(dto.getOneOneInquiryText())
-                .oneOneInquiryFile(dto.getOneOneInquiryFile().getOriginalFilename())
                 .build();
 
                 service.createOneOneInquiry(oneOneInquiry);

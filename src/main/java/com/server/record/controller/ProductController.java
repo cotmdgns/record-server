@@ -46,7 +46,7 @@ public class ProductController {
                     .productName(product.getProductName())
                     .productPrice(product.getProductPrice())
                     .productType(product.getProductType())
-                    .productImgOne(mainImg.get(0).getProductImgAddress())
+//                    .productImgOne(mainImg.get(0).getProductImgAddress())
                     .productQuantity(product.getProductQuantity())
                     .build();
             list.add(dto);
@@ -65,7 +65,7 @@ public class ProductController {
                     .productName(product.getProductName())
                     .productPrice(product.getProductPrice())
                     .productType(product.getProductType())
-                    .productImgOne(mainImg.get(0).getProductImgAddress())
+//                    .productImgOne(mainImg.get(0).getProductImgAddress())
                     .productQuantity(product.getProductQuantity())
                     .build();
             list.add(dto);
