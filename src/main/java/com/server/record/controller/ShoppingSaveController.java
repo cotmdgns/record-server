@@ -57,9 +57,8 @@ public class ShoppingSaveController {
 
     // 결제페이지 나가면 바로 삭제되게끔 만들기 or 결제 취소 눌렀을때
     @DeleteMapping("createShoppingSaveOrderDelete")
-    public ResponseEntity createShoppingSaveOrderDelete(@RequestParam(name="userCode") int userCode,@RequestParam(name="productCode") int productCode){
-//        log.info("" + userCode);
-//        log.info("" + productCode);
+    public ResponseEntity createShoppingSaveOrderDelete(@RequestParam(name="userCode") int userCode,
+                                                        @RequestParam(name="productCode") int productCode){
         ShoppingSaveOrder shoppingSaveOrder = ShoppingSaveOrder.builder()
                 .userCode(userCode)
                 .productCode(productCode)
@@ -89,36 +88,22 @@ public class ShoppingSaveController {
     // 장바구니 생성하기 ( 디테일 페이지 )
     @PostMapping("createShoppingSave")
     public ResponseEntity create(@RequestBody ShoppingSaveDTO shoppingSaveDto){
-        log.info("확인용 : " + shoppingSaveDto);
-
-        if(shoppingSaveDto.getProductType().equals("LP")){
             service.createShoppingSave(ShoppingSave.builder()
                     .productCode(shoppingSaveDto.getProductCode())
                     .userCode(shoppingSaveDto.getUserCode())
                     .build());
-        }
-        if(shoppingSaveDto.getProductType().equals("Record")){
-            service.createShoppingSave(ShoppingSave.builder()
-                    .productCode(shoppingSaveDto.getProductCode())
-                    .userCode(shoppingSaveDto.getUserCode())
-                    .build());
-        }
         return ResponseEntity.ok().build();
     };
     // 삭제하기 ( 디테일 페이지에서 삭제하기 )
     @DeleteMapping("deleteShoppingSave")
     public ResponseEntity deleteShoppingSave (@RequestParam(name="userCode") int userCode,
-                                              @RequestParam(name="productCode") int productCode,
-                                              @RequestParam(name="productType") String productType){
-        if(productType.equals("LP")){
+                                              @RequestParam(name="productCode") int productCode){
             ShoppingSave shoppingSave = ShoppingSave.builder()
                     .productCode(productCode)
                     .userCode(userCode)
                     .build();
             ShoppingSave userProductSave = service.userMemberSaveCheck(shoppingSave);
-
             service.DeleteProductSave(userProductSave.getShoppingCode());
-        }
         return ResponseEntity.ok().build();
     }
 

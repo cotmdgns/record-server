@@ -18,9 +18,10 @@ public class ShoppingSaveDTO {
     private int shoppingCode;
     private int productCode;
     private int userCode;
-    private String productType;
     private int productCount; // 갯수
 
     private String productImg;
     private Product product;
+
+
 }
