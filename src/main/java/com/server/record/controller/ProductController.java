@@ -221,10 +221,9 @@ public class ProductController {
     // 가져온 파일을 UUID 로 랜덤 이름값 같이 붙여서 만들어주기
     public String fileUpload(MultipartFile file, Product product) throws IOException {
         UUID uuid = UUID.randomUUID();
-        // 멀티파일로 가져온 이름 오리지널로 바꿔주면서 저장하기
         String fileName = uuid.toString()+"_"+file.getOriginalFilename();
-        //집에서 할때만 잠깐 끄기
-        File copyFile = new File(url +File.separator + "Product"+ File.separator + product.getProductType() + File.separator + product.getProductCode() + File.separator + fileName);
+        File copyFile = new File(url +File.separator + "Product"+ File.separator + product.getProductType() +
+                                                    File.separator + product.getProductCode() + File.separator + fileName);
         file.transferTo(copyFile);
         return fileName;
     }
