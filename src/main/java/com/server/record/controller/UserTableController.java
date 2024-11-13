@@ -79,14 +79,8 @@ public class UserTableController {
     // 아이디 체크
     @GetMapping("/idCheck/{id}")
     public ResponseEntity idCheck(@PathVariable String id){
-        try{
-            UserTable member = service.idCheck(id);
-            //있을 경우
-            return ResponseEntity.status(HttpStatus.OK).body(member);
-        }catch (Exception exception){
-            // 없을 경우
-            return ResponseEntity.ok().build();
-        }
+        UserTable member = service.idCheck(id);
+        return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
     // 수정하기
